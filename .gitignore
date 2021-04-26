@@ -1,0 +1,5 @@
+bin
+obj
+MyRtspServer.vcxproj
+MyRtspServer.vcxproj.user
+*.c
