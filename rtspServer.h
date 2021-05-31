@@ -13,17 +13,22 @@ desc: rtsp服务器类，使用rtsp协议传输数据
 
 #include "udpSocket.h"
 #include "tcpSocket.h"
+#include "rtspSession.h"
+
+#define BUFSIZE 4096
 
 class RtspServer {
 public:
 	RtspServer(int serverport, int rtpPort, int rtcpPort);
 	~RtspServer();
 
+	//rtsp数据接收和发送过程
+	void messagesProcess(int clientSockfd);
+
 	void start();                        //启动
 private:
 	TcpSocket serverSockfd_;                    //使用tcp连接，客户端和服务端
-	UdpSocket serverRtpFd_;                     //udp传输rtp数据
-	UdpSocket serverRtcpFd_;                    //udp传输rtcp数据
+	RtspSession* session;                               //解析消息
 
 };
 #endif // !RTSPSERVER_H

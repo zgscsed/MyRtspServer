@@ -40,6 +40,9 @@ public:
 	//判断创建套接字是否成功
 	bool isCreate();
 
+	//输出当前套接字ip和端口
+	void printIPAndPort();
+
 private:
 	int fd_;
 };

@@ -127,3 +127,30 @@ bool TcpSocket::isCreate()
 
 	return true;
 }
+
+//输出当前套接字ip和端口
+void TcpSocket::printIPAndPort()
+{
+	sockaddr_storage storage;                       // 能够适应不同种类的地址协议结构
+	socklen_t   sock_len = sizeof(storage);         // 必须给初值
+	int ret = getsockname(fd_, (sockaddr*)&storage, &sock_len);        //根据fd得到地址信息
+	if (ret < 0) 
+	{
+		std::cout << "getsockname error :" << errno << std::endl;
+		return;
+	}
+
+	if (storage.ss_family == AF_INET)
+	{
+		sockaddr_in* addr = (sockaddr_in*)&storage;
+		std::cout << "local addr: " << inet_ntoa(addr->sin_addr) << ":" << ntohs(addr->sin_port) << std::endl;
+	}
+	else if (storage.ss_family == AF_INET6) 
+	{
+		sockaddr_in6* addr = (sockaddr_in6*)&storage;
+		char ip[INET6_ADDRSTRLEN];
+		inet_ntop(AF_INET6, &addr->sin6_addr, ip, sizeof(addr));
+		std::cout << "local addr: " << ip << ":" << ntohs(addr->sin6_port) << std::endl;
+	
+	}
+}
