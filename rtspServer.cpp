@@ -1,10 +1,10 @@
-/*
+ï»¿/*
 Copyright
 time: 2021.4.26
 author:zhoudong
-desc: rtsp·şÎñÆ÷Àà£¬Ê¹ÓÃrtspĞ­Òé´«ÊäÊı¾İ
+desc: rtspæœåŠ¡å™¨ç±»ï¼Œä½¿ç”¨rtspåè®®ä¼ è¾“æ•°æ®
 
-Àà¹¦ÄÜÁ÷³Ì£ºtcp½ÓÊÕ¿Í»§¶ËÁ¬½Ó£¬¸ù¾İrtspĞ­Òé½ÓÊÕÊı¾İ²¢½âÎö·¢ËÍµ½¿Í»§¶Ë£¬×îºó´«ÊärtpÊı¾İ
+ç±»åŠŸèƒ½æµç¨‹ï¼štcpæ¥æ”¶å®¢æˆ·ç«¯è¿æ¥ï¼Œæ ¹æ®rtspåè®®æ¥æ”¶æ•°æ®å¹¶è§£æå‘é€åˆ°å®¢æˆ·ç«¯ï¼Œæœ€åä¼ è¾“rtpæ•°æ®
 
 */
 #include "rtspServer.h"
@@ -16,7 +16,7 @@ desc: rtsp·şÎñÆ÷Àà£¬Ê¹ÓÃrtspĞ­Òé´«ÊäÊı¾İ
 
 
 
-//½ÓÊÕÊı¾İ
+//æ¥æ”¶æ•°æ®
 int recvn(int fd, std::string&buf)
 {
 	int nbyte = 0;
@@ -33,7 +33,7 @@ int recvn(int fd, std::string&buf)
 	return readsum;
 }
 
-//·¢ËÍÊı¾İ
+//å‘é€æ•°æ®
 int sendn(int fd, std::string &buf)
 {
 	int length = buf.size();
@@ -45,7 +45,7 @@ int sendn(int fd, std::string &buf)
 RtspServer::RtspServer(int serverport, int rtpPort, int rtcpPort)
 	:serverSockfd_()
 {
-	//ÉèÖÃ·şÎñÆ÷Ì×½Ó×Ö
+	//è®¾ç½®æœåŠ¡å™¨å¥—æ¥å­—
 	serverSockfd_.setReuseAddr();
 	serverSockfd_.bindAddr(serverport);
 	serverSockfd_.listen();
@@ -62,58 +62,58 @@ RtspServer::~RtspServer()
 
 }
 
-//rtspÊı¾İ½ÓÊÕºÍ·¢ËÍ¹ı³Ì
+//rtspæ•°æ®æ¥æ”¶å’Œå‘é€è¿‡ç¨‹
 void RtspServer::messagesProcess(int clientSockfd)
 {
 
-	RtspRequestContext rtspRequestContet;              //ÇëÇóÏûÏ¢½á¹¹Ìå
-	//RtspResponseContext rtspResponseContext;           //ÏìÓ¦ÏûÏ¢½á¹¹Ìå
-	std::string rtspResponseContext;                   //ÏìÓ¦ÏûÏ¢
-	std::string recvBuf;                               //½ÓÊÕÏûÏ¢
-	std::string sendBuf;                               //·¢ËÍÏûÏ¢
+	RtspRequestContext rtspRequestContet;              //è¯·æ±‚æ¶ˆæ¯ç»“æ„ä½“
+	//RtspResponseContext rtspResponseContext;           //å“åº”æ¶ˆæ¯ç»“æ„ä½“
+	std::string rtspResponseContext;                   //å“åº”æ¶ˆæ¯
+	std::string recvBuf;                               //æ¥æ”¶æ¶ˆæ¯
+	std::string sendBuf;                               //å‘é€æ¶ˆæ¯
 
-	//rtsp½»»¥¹ı³Ì
+	//rtspäº¤äº’è¿‡ç¨‹
 	while (1)
 	{
-		//½ÓÊÕ¿Í»§¶ËµÄÏûÏ¢
+		//æ¥æ”¶å®¢æˆ·ç«¯çš„æ¶ˆæ¯
 		int readsum = recvn(clientSockfd, recvBuf);
 
-		//Ã»ÓĞÊÕµ½Êı¾İ£¬ËµÃ÷Á¬½ÓÓĞÎÊÌâ£¬Ö±½ÓÍË³ö
+		//æ²¡æœ‰æ”¶åˆ°æ•°æ®ï¼Œè¯´æ˜è¿æ¥æœ‰é—®é¢˜ï¼Œç›´æ¥é€€å‡º
 		if (readsum <= 0)
 			break;
 
 		std::cout << "----------------C->S---------------------------"<<std::endl;
 		std::cout << recvBuf << std::endl;
 
-		//½âÎöÏûÏ¢
+		//è§£ææ¶ˆæ¯
 		session->praseRtspRequest(recvBuf, rtspRequestContet);
 
-		//ÏûÏ¢´¦Àí
+		//æ¶ˆæ¯å¤„ç†
 		session->rtspProcess(rtspRequestContet, rtspResponseContext);
 
 		std::cout << "----------------S->C---------------------------" << std::endl;
 		std::cout << rtspResponseContext << std::endl;
 
 
-		//·µ»ØÏûÏ¢
+		//è¿”å›æ¶ˆæ¯
 		sendn(clientSockfd, rtspResponseContext);
 	}
 
-	//¹Ø±Õ¿Í»§¶Ë·½ÏòµÄÁ¬½Ó
+	//å…³é—­å®¢æˆ·ç«¯æ–¹å‘çš„è¿æ¥
 	::close(clientSockfd);
 }
 
-//Æô¶¯
+//å¯åŠ¨
 void RtspServer::start()
 {
-	//µÚÒ»²½
+	//ç¬¬ä¸€æ­¥
 	if (!serverSockfd_.isCreate())
 	{
-		//´´½¨Ì×½Ó×ÖÓĞÎÊÌâ£¬Ö±½Ó·µ»Ø
+		//åˆ›å»ºå¥—æ¥å­—æœ‰é—®é¢˜ï¼Œç›´æ¥è¿”å›
 		return;
 	}
 
-	//µÚ¶ş²½£¬¿ªÊ¼½ÓÊÕ¿Í»§¶ËµÄÁ¬½ÓÇëÇó
+	//ç¬¬äºŒæ­¥ï¼Œå¼€å§‹æ¥æ”¶å®¢æˆ·ç«¯çš„è¿æ¥è¯·æ±‚
 	serverSockfd_.printIPAndPort();
 
 	while (1)
@@ -124,14 +124,14 @@ void RtspServer::start()
 
 		struct sockaddr_in clientaddr;
 
-		//Á¬½ÓÒ»¸ö¿Í»§¶Ëºó
+		//è¿æ¥ä¸€ä¸ªå®¢æˆ·ç«¯å
 		if ((clientSockfd = serverSockfd_.accept(clientaddr)) > 0)
 		{
-			//½âÎö¿Í»§¶ËµÄipºÍ¶Ë¿Ú
+			//è§£æå®¢æˆ·ç«¯çš„ipå’Œç«¯å£
 			std::cout << "new clinet from ip: " << inet_ntoa(clientaddr.sin_addr) 
 				<< ":" << ntohs(clientaddr.sin_port) << std::endl;
 
-			//Í¨ĞÅ£¬rtspµÄ½»»¥¹ı³Ì
+			//é€šä¿¡ï¼Œrtspçš„äº¤äº’è¿‡ç¨‹
 			messagesProcess(clientSockfd);
 
 		}

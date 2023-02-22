@@ -1,8 +1,8 @@
-/*
+ï»¿/*
 Copyright
 time: 2021.4.25
 author:zhoudong
-desc: ·şÎñÆ÷¶ËsocketÀà,udp´«Êä£¬·â×°socketÃèÊö·ûºÍ³õÊ¼»¯²Ù×÷
+desc: æœåŠ¡å™¨ç«¯socketç±»,udpä¼ è¾“ï¼Œå°è£…socketæè¿°ç¬¦å’Œåˆå§‹åŒ–æ“ä½œ
 
 */
 
@@ -17,7 +17,7 @@ desc: ·şÎñÆ÷¶ËsocketÀà,udp´«Êä£¬·â×°socketÃèÊö·ûºÍ³õÊ¼»¯²Ù×÷
 
 UdpSocket::UdpSocket()
 {
-	//´´½¨Ì×½Ó×Ö
+	//åˆ›å»ºå¥—æ¥å­—
 	fd_ = socket(AF_INET, SOCK_DGRAM, 0);
 	if (fd_ < 0)
 	{
@@ -33,14 +33,14 @@ UdpSocket::~UdpSocket()
 	std::cout << "~udpSocket()" << std::endl;
 }
 
-//ÉèÖÃµØÖ·ÖØÓÃ
+//è®¾ç½®åœ°å€é‡ç”¨
 void UdpSocket::setReuseAddr()
 {
 	int on = 1;
 	setsockopt(fd_, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on));
 }
 
-//°ó¶¨µØÖ·
+//ç»‘å®šåœ°å€
 bool UdpSocket::bindAddr(int port)
 {
 	struct sockaddr_in addr;
@@ -59,7 +59,7 @@ bool UdpSocket::bindAddr(int port)
 	return true;
 }
 
-//¹Ø±Õfd
+//å…³é—­fd
 bool UdpSocket::close()
 {
 	::close(fd_);
@@ -68,7 +68,7 @@ bool UdpSocket::close()
 	return true;
 }
 
-//ÅĞ¶Ï´´½¨Ì×½Ó×ÖÊÇ·ñ³É¹¦
+//åˆ¤æ–­åˆ›å»ºå¥—æ¥å­—æ˜¯å¦æˆåŠŸ
 bool UdpSocket::isCreate()
 {
 	if (fd_ == -1)
@@ -79,12 +79,12 @@ bool UdpSocket::isCreate()
 	return true;
 }
 
-//Êä³öµ±Ç°Ì×½Ó×ÖipºÍ¶Ë¿Ú
+//è¾“å‡ºå½“å‰å¥—æ¥å­—ipå’Œç«¯å£
 void UdpSocket::printIPAndPort()
 {
-	sockaddr_storage storage;                       // ÄÜ¹»ÊÊÓ¦²»Í¬ÖÖÀàµÄµØÖ·Ğ­Òé½á¹¹
-	socklen_t   sock_len = sizeof(storage);         // ±ØĞë¸ø³õÖµ
-	int ret = getsockname(fd_, (sockaddr*)&storage, &sock_len);        //¸ù¾İfdµÃµ½µØÖ·ĞÅÏ¢
+	sockaddr_storage storage;                       // èƒ½å¤Ÿé€‚åº”ä¸åŒç§ç±»çš„åœ°å€åè®®ç»“æ„
+	socklen_t   sock_len = sizeof(storage);         // å¿…é¡»ç»™åˆå€¼
+	int ret = getsockname(fd_, (sockaddr*)&storage, &sock_len);        //æ ¹æ®fdå¾—åˆ°åœ°å€ä¿¡æ¯
 	if (ret < 0)
 	{
 		std::cout << "getsockname error :" << errno << std::endl;

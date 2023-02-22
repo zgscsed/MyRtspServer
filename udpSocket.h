@@ -1,3 +1,12 @@
+ï»¿/*
+ * Copyright (C) 2023 zgscsed. All rights reserved.
+ * @filename: file name
+ * @Author: zgscsed
+ * @Date: 2021-04-25 13:55:09
+ * @LastEditors: zgscsed
+ * @LastEditTime: 2023-02-22 23:23:17
+ * @Description: file content
+ */
 #ifndef UDPSOCKET_H
 #define UDPSOCKET_H
 
@@ -5,7 +14,7 @@
 Copyright
 time: 2021.4.25
 author:zhoudong
-desc: ·şÎñÆ÷¶ËsocketÀà,udp´«Êä£¬·â×°socketÃèÊö·ûºÍ³õÊ¼»¯²Ù×÷
+desc: æœåŠ¡å™¨ç«¯socketç±»,udpä¼ è¾“ï¼Œå°è£…socketæè¿°ç¬¦å’Œåˆå§‹åŒ–æ“ä½œ
 
 */
 
@@ -18,22 +27,22 @@ public:
 	UdpSocket();
 	~UdpSocket();
 
-	//ÉèÖÃµØÖ·ÖØÓÃ
+	//è®¾ç½®åœ°å€é‡ç”¨
 	void setReuseAddr();
 
-	//°ó¶¨µØÖ·
+	//ç»‘å®šåœ°å€
 	bool bindAddr(int port);
 
-	//·µ»Øfd
+	//è¿”å›fd
 	int getFd() const { return fd_; }
 
-	//¹Ø±Õfd
+	//å…³é—­fd
 	bool close();
 
-	//ÅĞ¶Ï´´½¨Ì×½Ó×ÖÊÇ·ñ³É¹¦
+	//åˆ¤æ–­åˆ›å»ºå¥—æ¥å­—æ˜¯å¦æˆåŠŸ
 	bool isCreate();
 
-	//Êä³öµ±Ç°Ì×½Ó×ÖipºÍ¶Ë¿Ú
+	//è¾“å‡ºå½“å‰å¥—æ¥å­—ipå’Œç«¯å£
 	void printIPAndPort();
 
 private:

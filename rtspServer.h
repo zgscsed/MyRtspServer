@@ -1,10 +1,10 @@
-/*
+ï»¿/*
 Copyright
 time: 2021.4.26
 author:zhoudong
-desc: rtsp·şÎñÆ÷Àà£¬Ê¹ÓÃrtspĞ­Òé´«ÊäÊı¾İ
+desc: rtspæœåŠ¡å™¨ç±»ï¼Œä½¿ç”¨rtspåè®®ä¼ è¾“æ•°æ®
 
-Àà¹¦ÄÜÁ÷³Ì£ºtcp½ÓÊÕ¿Í»§¶ËÁ¬½Ó£¬¸ù¾İrtspĞ­Òé½ÓÊÕÊı¾İ²¢½âÎö·¢ËÍµ½¿Í»§¶Ë£¬×îºó´«ÊärtpÊı¾İ
+ç±»åŠŸèƒ½æµç¨‹ï¼štcpæ¥æ”¶å®¢æˆ·ç«¯è¿æ¥ï¼Œæ ¹æ®rtspåè®®æ¥æ”¶æ•°æ®å¹¶è§£æå‘é€åˆ°å®¢æˆ·ç«¯ï¼Œæœ€åä¼ è¾“rtpæ•°æ®
 
 */
 
@@ -22,13 +22,13 @@ public:
 	RtspServer(int serverport, int rtpPort, int rtcpPort);
 	~RtspServer();
 
-	//rtspÊı¾İ½ÓÊÕºÍ·¢ËÍ¹ı³Ì
+	//rtspæ•°æ®æ¥æ”¶å’Œå‘é€è¿‡ç¨‹
 	void messagesProcess(int clientSockfd);
 
-	void start();                        //Æô¶¯
+	void start();                        //å¯åŠ¨
 private:
-	TcpSocket serverSockfd_;                    //Ê¹ÓÃtcpÁ¬½Ó£¬¿Í»§¶ËºÍ·şÎñ¶Ë
-	RtspSession* session;                               //½âÎöÏûÏ¢
+	TcpSocket serverSockfd_;                    //ä½¿ç”¨tcpè¿æ¥ï¼Œå®¢æˆ·ç«¯å’ŒæœåŠ¡ç«¯
+	RtspSession* session;                               //è§£ææ¶ˆæ¯
 
 };
 #endif // !RTSPSERVER_H

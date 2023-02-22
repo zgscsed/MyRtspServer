@@ -1,8 +1,8 @@
-/*
+ï»¿/*
 Copyright
 time: 2021.4.24
 author:zhoudong
-desc: ·şÎñÆ÷¶ËsocketÀà£¬·â×°socketÃèÊö·ûºÍ³õÊ¼»¯²Ù×÷
+desc: æœåŠ¡å™¨ç«¯socketç±»ï¼Œå°è£…socketæè¿°ç¬¦å’Œåˆå§‹åŒ–æ“ä½œ
 
 */
 #include "tcpSocket.h"
@@ -16,7 +16,7 @@ desc: ·şÎñÆ÷¶ËsocketÀà£¬·â×°socketÃèÊö·ûºÍ³õÊ¼»¯²Ù×÷
 #include <cstring>
 TcpSocket::TcpSocket()
 {
-	//´´½¨Ì×½Ó×Ö
+	//åˆ›å»ºå¥—æ¥å­—
 	fd_ = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd_ == -1)
 	{
@@ -32,24 +32,24 @@ TcpSocket::~TcpSocket()
 	std::cout << "server socket close..." << std::endl;
 }
 
-//ÉèÖÃµØÖ·ÖØÓÃ
+//è®¾ç½®åœ°å€é‡ç”¨
 void TcpSocket::setReuseAddr()
 {
 	int on = 1;
 	setsockopt(fd_, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 }
 
-//ÉèÖÃ·Ç×èÈû
+//è®¾ç½®éé˜»å¡
 void TcpSocket::setNonBlocking()
 {
-	int opts = fcntl(fd_, F_GETFL);              //»ñµÃfdÎÄ¼şµÄ×´Ì¬±êÖ¾²ÎÊı
+	int opts = fcntl(fd_, F_GETFL);              //è·å¾—fdæ–‡ä»¶çš„çŠ¶æ€æ ‡å¿—å‚æ•°
 	if (opts < 0)
 	{
 		std::cout << "fcntl(fd_, F_GETFL) error" << std::endl;
 		exit(1);
 	}
 
-	if (fcntl(fd_, F_SETFL, opts | O_NONBLOCK) < 0)          //ÉèÖÃ·Ç×èÈû
+	if (fcntl(fd_, F_SETFL, opts | O_NONBLOCK) < 0)          //è®¾ç½®éé˜»å¡
 	{
 		std::cout << "fcntl(fd_,F_SETFL, opts" << std::endl;
 		exit(1);
@@ -57,7 +57,7 @@ void TcpSocket::setNonBlocking()
 	std::cout << "server setnonblocking..." << std::endl;
 }
 
-//µØÖ·°ó¶¨
+//åœ°å€ç»‘å®š
 bool TcpSocket::bindAddr(int serverport)
 {
 	struct sockaddr_in serveraddr;
@@ -78,7 +78,7 @@ bool TcpSocket::bindAddr(int serverport)
 	return true;
 }
 
-//¼àÌı
+//ç›‘å¬
 bool TcpSocket::listen()
 {
 	if (::listen(fd_, 8888) < 0)
@@ -91,7 +91,7 @@ bool TcpSocket::listen()
 	return true;
 }
 
-//»ñÈ¡Á¬½Ó
+//è·å–è¿æ¥
 int TcpSocket::accept(struct sockaddr_in &clientaddr)
 {
 	socklen_t lengthofsockaddr = sizeof(clientaddr);
@@ -108,7 +108,7 @@ int TcpSocket::accept(struct sockaddr_in &clientaddr)
 	return clientfd;
 }
 
-//¹Ø±Õfd
+//å…³é—­fd
 bool TcpSocket::close()
 {
 	::close(fd_);
@@ -117,7 +117,7 @@ bool TcpSocket::close()
 	return true;
 }
 
-//ÅĞ¶Ï´´½¨Ì×½Ó×ÖÊÇ·ñ³É¹¦
+//åˆ¤æ–­åˆ›å»ºå¥—æ¥å­—æ˜¯å¦æˆåŠŸ
 bool TcpSocket::isCreate()
 {
 	if (fd_ == -1)
@@ -128,12 +128,12 @@ bool TcpSocket::isCreate()
 	return true;
 }
 
-//Êä³öµ±Ç°Ì×½Ó×ÖipºÍ¶Ë¿Ú
+//è¾“å‡ºå½“å‰å¥—æ¥å­—ipå’Œç«¯å£
 void TcpSocket::printIPAndPort()
 {
-	sockaddr_storage storage;                       // ÄÜ¹»ÊÊÓ¦²»Í¬ÖÖÀàµÄµØÖ·Ğ­Òé½á¹¹
-	socklen_t   sock_len = sizeof(storage);         // ±ØĞë¸ø³õÖµ
-	int ret = getsockname(fd_, (sockaddr*)&storage, &sock_len);        //¸ù¾İfdµÃµ½µØÖ·ĞÅÏ¢
+	sockaddr_storage storage;                       // èƒ½å¤Ÿé€‚åº”ä¸åŒç§ç±»çš„åœ°å€åè®®ç»“æ„
+	socklen_t   sock_len = sizeof(storage);         // å¿…é¡»ç»™åˆå€¼
+	int ret = getsockname(fd_, (sockaddr*)&storage, &sock_len);        //æ ¹æ®fdå¾—åˆ°åœ°å€ä¿¡æ¯
 	if (ret < 0) 
 	{
 		std::cout << "getsockname error :" << errno << std::endl;

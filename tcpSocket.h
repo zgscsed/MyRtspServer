@@ -1,11 +1,11 @@
-#ifndef TCPSOCKET_H
+ï»¿#ifndef TCPSOCKET_H
 #define TCPSOCKET_H
 
 /*
 Copyright
 time: 2021.4.24
 author:zhoudong
-desc: ·şÎñÆ÷¶ËsocketÀà£¬·â×°socketÃèÊö·ûºÍ³õÊ¼»¯²Ù×÷
+desc: æœåŠ¡å™¨ç«¯socketç±»ï¼Œå°è£…socketæè¿°ç¬¦å’Œåˆå§‹åŒ–æ“ä½œ
 
 */
 #include <sys/socket.h>
@@ -16,31 +16,31 @@ public:
 	TcpSocket();
 	~TcpSocket();
 
-	//ÉèÖÃµØÖ·ÖØÓÃ
+	//è®¾ç½®åœ°å€é‡ç”¨
 	void setReuseAddr();
 
-	//ÉèÖÃ·Ç×èÈû
+	//è®¾ç½®éé˜»å¡
 	void setNonBlocking();
 
-	//µØÖ·°ó¶¨
+	//åœ°å€ç»‘å®š
 	bool bindAddr(int serverport);
 
-	//¼àÌı
+	//ç›‘å¬
 	bool listen();
 
-	//»ñÈ¡Á¬½Ó
+	//è·å–è¿æ¥
 	int accept(struct sockaddr_in &clientaddr);
 
-	//·µ»Øfd
+	//è¿”å›fd
 	int getFd() const { return fd_; }
 
-	//¹Ø±Õfd
+	//å…³é—­fd
 	bool close();
 
-	//ÅĞ¶Ï´´½¨Ì×½Ó×ÖÊÇ·ñ³É¹¦
+	//åˆ¤æ–­åˆ›å»ºå¥—æ¥å­—æ˜¯å¦æˆåŠŸ
 	bool isCreate();
 
-	//Êä³öµ±Ç°Ì×½Ó×ÖipºÍ¶Ë¿Ú
+	//è¾“å‡ºå½“å‰å¥—æ¥å­—ipå’Œç«¯å£
 	void printIPAndPort();
 
 private:

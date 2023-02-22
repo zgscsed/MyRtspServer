@@ -1,8 +1,8 @@
-/*
+ï»¿/*
 Copyright
 time: 2021.4.26
 author:zhoudong
-desc: rtsp·şÎñÆ÷µÄ»á»°½âÎöÀà£¬ÊµÏÖ½âÎörstp½»»¥
+desc: rtspæœåŠ¡å™¨çš„ä¼šè¯è§£æç±»ï¼Œå®ç°è§£ærstpäº¤äº’
 
 */
 
@@ -28,20 +28,20 @@ RtspSession::~RtspSession()
 	serverRtcpFd_.close();
 }
 
-//½âÎöÏûÏ¢
+//è§£ææ¶ˆæ¯
 bool RtspSession::praseRtspRequest(std::string&msg, RtspRequestContext & rtspRequestContext)
 {
 /*
-ÇëÇó¸ñÊ½£º
-method url vesion\r\n        //ÇëÇóĞĞ
-CSeq: x\r\n                  //Ê×²¿ĞĞ, Ò²½ĞÇëÇóÍ·
+è¯·æ±‚æ ¼å¼ï¼š
+method url vesion\r\n        //è¯·æ±‚è¡Œ
+CSeq: x\r\n                  //é¦–éƒ¨è¡Œ, ä¹Ÿå«è¯·æ±‚å¤´
 xxx\r\n
 ...
-\r\n                         //Ê×²¿ĞĞ
+\r\n                         //é¦–éƒ¨è¡Œ
 
-//ÊµÌå
+//å®ä½“
 */
-	std::string crlf("\r\n");           //ÇëÇóÏûÏ¢µÄ·Ö¸ô·û
+	std::string crlf("\r\n");           //è¯·æ±‚æ¶ˆæ¯çš„åˆ†éš”ç¬¦
 	std::string crlfcrlf("\r\n\r\n");
 
 	int prev = 0;
@@ -49,7 +49,7 @@ xxx\r\n
 
 	if ((next = msg.find(crlf, prev)) != msg.npos)
 	{
-		//ÕÒµ½crlf³öÏÖµÄÎ»ÖÃ,²¢È¡³öÇëÇóĞĞÏûÏ¢
+		//æ‰¾åˆ°crlfå‡ºç°çš„ä½ç½®,å¹¶å–å‡ºè¯·æ±‚è¡Œæ¶ˆæ¯
 		std::string request_line(msg.substr(prev, next - prev));
 		std::stringstream iss(request_line);
 		iss >> rtspRequestContext.method;
@@ -64,18 +64,18 @@ xxx\r\n
 		return false;
 	}
 
-	//½âÎöÇëÇóÍ·
+	//è§£æè¯·æ±‚å¤´
 	std::string key, value;
 	int pos_crlfcrlf = 0;
-	if ((pos_crlfcrlf = msg.find(crlfcrlf, prev)) != msg.npos)       //È·¶¨crlfcrlfµÄÎ»ÖÃ
+	if ((pos_crlfcrlf = msg.find(crlfcrlf, prev)) != msg.npos)       //ç¡®å®šcrlfcrlfçš„ä½ç½®
 	{
-		while (prev != pos_crlfcrlf)        //×îĞÂµÄÎ»ÖÃÃ»ÓĞÖ¸µ¼CRLFCRLF£¬ËµÃ÷ÖĞ¼äÓĞÇëÇóÍ·Êı¾İ
+		while (prev != pos_crlfcrlf)        //æœ€æ–°çš„ä½ç½®æ²¡æœ‰æŒ‡å¯¼CRLFCRLFï¼Œè¯´æ˜ä¸­é—´æœ‰è¯·æ±‚å¤´æ•°æ®
 		{
-			//ÕÒµ½µÚÒ»×é
-			int pos = msg.find(crlf, prev + 2);      //prev+2Ô­ÒòÊÇprevÖ¸Ïòcrlf£¬ Ò»¸öÓĞÁ½¸ö×Ö·û£¬ĞèÒªÌø¹ı
-			int pos_colon = msg.find(":", prev + 2);    //È·¶¨Ã°ºÅµÄÎ»ÖÃ
+			//æ‰¾åˆ°ç¬¬ä¸€ç»„
+			int pos = msg.find(crlf, prev + 2);      //prev+2åŸå› æ˜¯prevæŒ‡å‘crlfï¼Œ ä¸€ä¸ªæœ‰ä¸¤ä¸ªå­—ç¬¦ï¼Œéœ€è¦è·³è¿‡
+			int pos_colon = msg.find(":", prev + 2);    //ç¡®å®šå†’å·çš„ä½ç½®
 			key = msg.substr(prev + 2, pos_colon - prev - 2);
-			value = msg.substr(pos_colon + 2, pos - pos_colon - 2);    //Ã°ºÅºóÓĞ¿Õ¸ñ
+			value = msg.substr(pos_colon + 2, pos - pos_colon - 2);    //å†’å·åæœ‰ç©ºæ ¼
 
 			rtspRequestContext.header.insert(std::pair<std::string, std::string>(key, value));
 
@@ -89,7 +89,7 @@ xxx\r\n
 		return false;
 	}
 
-	//½âÎöÊµÌå
+	//è§£æå®ä½“
 	rtspRequestContext.body = msg.substr(pos_crlfcrlf + 4);
 
 	msg.clear();
@@ -97,7 +97,7 @@ xxx\r\n
 	return true;
 }
 
-//´¦ÀíÏûÏ¢
+//å¤„ç†æ¶ˆæ¯
 void RtspSession::rtspProcess(const RtspRequestContext& rtspRequestContext, std::string&responseContext)
 {
 	char result[100];
@@ -140,11 +140,11 @@ void RtspSession::rtspProcess(const RtspRequestContext& rtspRequestContext, std:
 	}
 	else if (rtspRequestContext.method == "SETUP")
 	{
-		//ÏÈ½âÎö¿Í»§¶Ërtp¶Ë¿ÚºÅ
-		auto it = rtspRequestContext.header.find("Transport");         //ÕÒµ½Transport
+		//å…ˆè§£æå®¢æˆ·ç«¯rtpç«¯å£å·
+		auto it = rtspRequestContext.header.find("Transport");         //æ‰¾åˆ°Transport
 		if (it != rtspRequestContext.header.end())
 		{
-			//´Ó×Ö·û´®ÖĞ£¬È¡³ö¶ÔÓ¦µÄÖµ
+			//ä»å­—ç¬¦ä¸²ä¸­ï¼Œå–å‡ºå¯¹åº”çš„å€¼
 			sscanf(it->second.c_str(), "Transport: RTP/AVP;unicast;client_port=%d-%d\r\n",
 				&clientRtpPort_, &clientRtcpPort_);
 		}
@@ -169,7 +169,7 @@ void RtspSession::rtspProcess(const RtspRequestContext& rtspRequestContext, std:
 			cseq);
 	}
 
-	//²¥·Å
+	//æ’­æ”¾
 	if (rtspRequestContext.method == "PLAY")
 	{
 

@@ -1,8 +1,8 @@
-/*
+ï»¿/*
 Copyright
 time: 2021.4.26
 author:zhoudong
-desc: rtsp·şÎñÆ÷µÄ»á»°½âÎöÀà£¬ÊµÏÖ½âÎörstp½»»¥
+desc: rtspæœåŠ¡å™¨çš„ä¼šè¯è§£æç±»ï¼Œå®ç°è§£ærstpäº¤äº’
 
 */
 
@@ -15,7 +15,7 @@ desc: rtsp·şÎñÆ÷µÄ»á»°½âÎöÀà£¬ÊµÏÖ½âÎörstp½»»¥
 
 #include "udpSocket.h"
 
-//Rtsp ÇëÇóÏûÏ¢½á¹¹Ìå
+//Rtsp è¯·æ±‚æ¶ˆæ¯ç»“æ„ä½“
 typedef struct _RtspRequestContext {
 	std::string method;
 	std::string url;
@@ -25,7 +25,7 @@ typedef struct _RtspRequestContext {
 	std::string body;
 }RtspRequestContext;
 
-//Rtsp ÏìÓ¦ÏûÏ¢½á¹¹Ìå
+//Rtsp å“åº”æ¶ˆæ¯ç»“æ„ä½“
 typedef struct _RtspResponseContext {
 	std::string version;
 	std::string statecode;
@@ -40,16 +40,16 @@ public:
 	RtspSession(int rtpPort, int rtcpPort);
 	~RtspSession();
 
-	//½âÎöÏûÏ¢
+	//è§£ææ¶ˆæ¯
 	bool praseRtspRequest(std::string&s, RtspRequestContext & rtspRequestContext);
 
-	//´¦ÀíÏûÏ¢
+	//å¤„ç†æ¶ˆæ¯
 	void rtspProcess(const RtspRequestContext& rtspRequestContext, std::string&responseContext);
 
 
 private:
-	UdpSocket serverRtpFd_;                     //udp´«ÊärtpÊı¾İ
-	UdpSocket serverRtcpFd_;                    //udp´«ÊärtcpÊı¾İ
+	UdpSocket serverRtpFd_;                     //udpä¼ è¾“rtpæ•°æ®
+	UdpSocket serverRtcpFd_;                    //udpä¼ è¾“rtcpæ•°æ®
 
 	int clientRtpPort_;
 	int clientRtcpPort_;
