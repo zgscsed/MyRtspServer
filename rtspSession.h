@@ -1,4 +1,13 @@
 ﻿/*
+ * Copyright (C) 2023 zgscsed. All rights reserved.
+ * @filename: file name
+ * @Author: zgscsed
+ * @Date: 2021-04-26 21:57:48
+ * @LastEditors: zgscsed
+ * @LastEditTime: 2023-02-24 21:45:30
+ * @Description: file content
+ */
+/*
 Copyright
 time: 2021.4.26
 author:zhoudong
@@ -11,6 +20,7 @@ desc: rtsp服务器的会话解析类，实现解析rstp交互
 
 #include <iostream>
 #include <map>
+#include <list>
 #include <string>
 
 #include "udpSocket.h"
@@ -21,7 +31,7 @@ typedef struct _RtspRequestContext {
 	std::string url;
 	std::string version;
 
-	std::map<std::string, std::string> header;
+	std::list<std::string, std::string> header;
 	std::string body;
 }RtspRequestContext;
 

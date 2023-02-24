@@ -41,10 +41,10 @@ xxx\r\n
 
 //实体
 */
-	std::string crlf("\r\n");           //请求消息的分隔符
+	std::string crlf("\r\n");           // 请求消息的分隔符
 	std::string crlfcrlf("\r\n\r\n");
 
-	int prev = 0;
+    int prev = 0;
 	int next = 0;
 
 	if ((next = msg.find(crlf, prev)) != msg.npos)
@@ -69,7 +69,7 @@ xxx\r\n
 	int pos_crlfcrlf = 0;
 	if ((pos_crlfcrlf = msg.find(crlfcrlf, prev)) != msg.npos)       //确定crlfcrlf的位置
 	{
-		while (prev != pos_crlfcrlf)        //最新的位置没有指导CRLFCRLF，说明中间有请求头数据
+		while (prev != pos_crlfcrlf)        //最新的位置不是CRLFCRLF，说明中间有请求头数据
 		{
 			//找到第一组
 			int pos = msg.find(crlf, prev + 2);      //prev+2原因是prev指向crlf， 一个有两个字符，需要跳过
