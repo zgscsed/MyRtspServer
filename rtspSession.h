@@ -4,7 +4,7 @@
  * @Author: zgscsed
  * @Date: 2021-04-26 21:57:48
  * @LastEditors: zgscsed
- * @LastEditTime: 2023-02-24 21:45:30
+ * @LastEditTime: 2023-02-26 22:34:47
  * @Description: file content
  */
 /*
@@ -23,6 +23,7 @@ desc: rtsp服务器的会话解析类，实现解析rstp交互
 #include <list>
 #include <string>
 
+#include "rtsp/RtspParser.hpp"
 #include "udpSocket.h"
 
 //Rtsp 请求消息结构体
@@ -31,7 +32,7 @@ typedef struct _RtspRequestContext {
 	std::string url;
 	std::string version;
 
-	std::list<std::string, std::string> header;
+	std::map<std::string, std::string> header;
 	std::string body;
 }RtspRequestContext;
 
@@ -52,9 +53,11 @@ public:
 
 	//解析消息
 	bool praseRtspRequest(std::string&s, RtspRequestContext & rtspRequestContext);
+	bool praseRtspRequest(std::string&s, RtspMessage **rtspMessage);
 
 	//处理消息
 	void rtspProcess(const RtspRequestContext& rtspRequestContext, std::string&responseContext);
+	void rtspProcess(RtspMessage *rtspMessage, std::string&responseContext);
 
 
 private:

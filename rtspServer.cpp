@@ -66,7 +66,8 @@ RtspServer::~RtspServer()
 void RtspServer::messagesProcess(int clientSockfd)
 {
 
-	RtspRequestContext rtspRequestContet;              //请求消息结构体
+	// RtspRequestContext rtspRequestContet;              //请求消息结构体
+	RtspMessage *rtspMessage = nullptr;
 	//RtspResponseContext rtspResponseContext;           //响应消息结构体
 	std::string rtspResponseContext;                   //响应消息
 	std::string recvBuf;                               //接收消息
@@ -86,10 +87,10 @@ void RtspServer::messagesProcess(int clientSockfd)
 		std::cout << recvBuf << std::endl;
 
 		//解析消息
-		session->praseRtspRequest(recvBuf, rtspRequestContet);
+		session->praseRtspRequest(recvBuf, &rtspMessage);
 
 		//消息处理
-		session->rtspProcess(rtspRequestContet, rtspResponseContext);
+		session->rtspProcess(rtspMessage, rtspResponseContext);
 
 		std::cout << "----------------S->C---------------------------" << std::endl;
 		std::cout << rtspResponseContext << std::endl;
