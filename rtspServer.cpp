@@ -1,4 +1,13 @@
 ﻿/*
+ * Copyright (C) 2023 zgscsed. All rights reserved.
+ * @filename: file name
+ * @Author: zgscsed
+ * @Date: 2021-04-26 16:22:12
+ * @LastEditors: zgscsed
+ * @LastEditTime: 2023-03-03 23:37:41
+ * @Description: file content
+ */
+/*
 Copyright
 time: 2021.4.26
 author:zhoudong
@@ -8,11 +17,16 @@ desc: rtsp服务器类，使用rtsp协议传输数据
 
 */
 #include "rtspServer.h"
+#include "rtsp/H264Rtp.hpp"
 
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <unistd.h>
 #include <iostream>
 #include <string>
+#include <fcntl.h>
 
 
 
@@ -63,7 +77,7 @@ RtspServer::~RtspServer()
 }
 
 //rtsp数据接收和发送过程
-void RtspServer::messagesProcess(int clientSockfd)
+void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 {
 
 	// RtspRequestContext rtspRequestContet;              //请求消息结构体
@@ -98,6 +112,46 @@ void RtspServer::messagesProcess(int clientSockfd)
 
 		//返回消息
 		sendn(clientSockfd, rtspResponseContext);
+
+		//播放
+		if (rtspMessage->rtspType == RTSP_PLAY)
+		{
+			int frameSize, startCode;
+			char* frame = (char*)malloc(500000);
+			struct RtpPacket *rtpPacket = (struct RtpPacket*)malloc(500000);
+			int fd = open("test.h264", O_RDONLY);
+			RtpHeaderInit(rtpPacket, 0, 0, 0, RTP_VESION, RTP_PAYLOAD_TYPE_H264, 0, 0, 0, 0x88923423);
+
+			std::cout <<"play"<<std::endl;
+
+			while (1)
+			{
+				frameSize = getFrameFromH264File(fd, frame, 500000);
+
+				if (frameSize < 0)
+				{
+					break;
+				}
+
+				if (startCode3(frame))
+				{
+					startCode = 3;
+				}
+				else
+				{
+					startCode = 4;
+				}
+				
+				frameSize -= startCode;
+				int ret = RtpSendH264Frame(session->serverRtpFd_.getFd(), clientIp, session->clientRtpPort_, rtpPacket, frame+startCode, frameSize);
+				std::cout <<"send rtp:"<< ret<<std::endl;
+				rtpPacket->rtpHeader.timestamp += 90000/25;
+
+				usleep(1000*1000/25);
+			}
+			free(frame);
+			free(rtpPacket);
+		}
 	}
 
 	//关闭客户端方向的连接
@@ -133,7 +187,7 @@ void RtspServer::start()
 				<< ":" << ntohs(clientaddr.sin_port) << std::endl;
 
 			//通信，rtsp的交互过程
-			messagesProcess(clientSockfd);
+			messagesProcess(clientSockfd, clientIP);
 
 		}
 	}

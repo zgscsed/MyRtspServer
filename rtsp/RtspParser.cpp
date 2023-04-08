@@ -4,7 +4,7 @@
  * @Author: zgscsed
  * @Date: 2023-02-25 21:18:20
  * @LastEditors: zgscsed
- * @LastEditTime: 2023-02-26 22:21:25
+ * @LastEditTime: 2023-03-03 23:27:46
  * @Description: 函数实现
  */
 
@@ -101,10 +101,10 @@ int RtspParser::ParseRequestHeader(RtspMessage* rtsp, std::string &msg, int pos)
     std::string key, value;
     int prev = pos;
     int pos_crlfcrlf = 0;
-    std::cout <<"pos:"<<pos<<std::endl;
+    // std::cout <<"pos:"<<pos<<std::endl;
     if ((pos_crlfcrlf = msg.find(CRLFCRLF, prev)) != msg.npos)       // 确定crlfcrlf的位置
     {
-        std::cout << "endpos:"<<pos_crlfcrlf<<std::endl;
+        // std::cout << "endpos:"<<pos_crlfcrlf<<std::endl;
         while (prev != pos_crlfcrlf && prev != pos_crlfcrlf + 2)                                // 最新的位置不是CRLFCRLF，说明中间有请求头数据
         {
             //找到第一组
@@ -165,12 +165,12 @@ bool RtspParser::SetRtspType(RtspMessage* rtsp)
     }
     else if (method.compare("SETUP") == 0)
     {
-        rtsp->rtspType = RTSP_OPTIONS;
+        rtsp->rtspType = RTSP_SETUP;
         return true;
     }
     else if (method.compare("PLAY") == 0)
     {
-        rtsp->rtspType = RTSP_SETUP;
+        rtsp->rtspType = RTSP_PLAY;
         return true;
     }
     else if (method.compare("TEARDOWN") == 0)

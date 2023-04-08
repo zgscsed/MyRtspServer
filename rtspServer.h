@@ -23,7 +23,7 @@ public:
 	~RtspServer();
 
 	//rtsp数据接收和发送过程
-	void messagesProcess(int clientSockfd);
+	void messagesProcess(int clientSockfd, char* clientIp);
 
 	void start();                        //启动
 private:

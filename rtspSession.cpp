@@ -103,7 +103,7 @@ void RtspSession::rtspProcess(const RtspRequestContext& rtspRequestContext, std:
 		if (it != rtspRequestContext.header.end())
 		{
 			//从字符串中，取出对应的值
-			sscanf(it->second.c_str(), "Transport: RTP/AVP;unicast;client_port=%d-%d\r\n",
+			sscanf(it->second.c_str(), "RTP/AVP;unicast;client_port=%d-%d\r\n",
 				&clientRtpPort_, &clientRtcpPort_);
 		}
 
@@ -149,6 +149,7 @@ void RtspSession::rtspProcess(RtspMessage *rtspMessage, std::string&responseCont
 		cseq = atoi(header.value.c_str());
 	}
 
+	std::cout <<"type:" <<rtspMessage->rtspType<<std::endl;
 	switch (rtspMessage->rtspType)
 	{
 	case RTSP_OPTIONS:
@@ -191,11 +192,12 @@ void RtspSession::rtspProcess(RtspMessage *rtspMessage, std::string&responseCont
 		bool isFind = FindHeader(rtspMessage->request->headers, "Transport", header);    //找到Transport
 		if (isFind)
 		{
+			std::cout <<"value:"<< header.value<<std::endl;
 			//从字符串中，取出对应的值
 			sscanf(header.value.c_str(), "RTP/AVP;unicast;client_port=%d-%d\r\n",
 				&clientRtpPort_, &clientRtcpPort_);
 		}
-
+		std::cout << "client rtp port:"<<clientRtpPort_<<std::endl;
 		sprintf(result, "RTSP/1.0 200 OK\r\n"
 			"CSeq: %d\r\n"
 			"Transport: RTP/AVP;unicast;client_port=%d-%d;server_port=%d-%d\r\n"
@@ -223,12 +225,6 @@ void RtspSession::rtspProcess(RtspMessage *rtspMessage, std::string&responseCont
 	}
 	default:
 		break;
-	}
-
-	//播放
-	if (rtspMessage->rtspType == RTSP_PLAY)
-	{
-
 	}
 
 	responseContext = "";

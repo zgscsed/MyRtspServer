@@ -78,7 +78,7 @@ void RtpHeaderInit(struct RtpPacket* rtpPacket, uint8_t csrcLen, uint8_t extensi
                    uint8_t padding, uint8_t version, uint8_t payloadType, uint8_t marker,
                    uint16_t seq, uint32_t timestamp, uint32_t ssrc);
 
-int RtpSendPacket(int socket, char* ip, int16_t port, struct RtpPacket* rtpPacket, uint32_t dataSize);
+int RtpSendPacket(int socket, const char* ip, int16_t port, struct RtpPacket* rtpPacket, uint32_t dataSize);
 
 
 

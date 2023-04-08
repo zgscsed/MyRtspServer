@@ -4,7 +4,7 @@
  * @Author: zgscsed
  * @Date: 2023-02-27 20:11:41
  * @LastEditors: zgscsed
- * @LastEditTime: 2023-02-27 20:19:13
+ * @LastEditTime: 2023-03-03 23:00:05
  * @Description: rtp 操作实现
  */
 #include "rtp.h"
@@ -29,7 +29,7 @@ void RtpHeaderInit(struct RtpPacket* rtpPacket, uint8_t csrcLen, uint8_t extensi
     rtpPacket->rtpHeader.ssrc = ssrc;
 }
 
-int RtpSendPacket(int socket, char* ip, int16_t port, struct RtpPacket* rtpPacket, uint32_t dataSize)
+int RtpSendPacket(int socket, const char* ip, int16_t port, struct RtpPacket* rtpPacket, uint32_t dataSize)
 {
     struct sockaddr_in addr;
     int ret;

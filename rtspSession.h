@@ -60,7 +60,7 @@ public:
 	void rtspProcess(RtspMessage *rtspMessage, std::string&responseContext);
 
 
-private:
+// private:
 	UdpSocket serverRtpFd_;                     //udp传输rtp数据
 	UdpSocket serverRtcpFd_;                    //udp传输rtcp数据
 
