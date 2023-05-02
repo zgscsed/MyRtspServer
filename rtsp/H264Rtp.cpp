@@ -130,7 +130,7 @@ int RtpSendH264Frame(int socket, const char* ip, int16_t port, struct RtpPacket 
 */
         memcpy(rtpPacket->payload, frame, frameSize);
         ret = RtpSendPacket(socket, ip, port, rtpPacket, frameSize);
-        std::cout << "RtpSendPacket ret:"<<ret<<std::endl;
+        //std::cout << "RtpSendPacket ret:"<<ret<<std::endl;
         if (ret < 0)
         {
             return -1;
@@ -190,7 +190,7 @@ int RtpSendH264Frame(int socket, const char* ip, int16_t port, struct RtpPacket 
 
             memcpy(rtpPacket->payload + 2, frame + pos, RTP_MAX_PKT_SIZE);
             ret = RtpSendPacket(socket, ip, port, rtpPacket, RTP_MAX_PKT_SIZE + 2);
-            std::cout << "RtpSendPacket2 ret:"<<ret<<std::endl;
+            //std::cout << "RtpSendPacket2 ret:"<<ret<<std::endl;
             if (ret < 0)
             {
                 return -1;
@@ -206,11 +206,11 @@ int RtpSendH264Frame(int socket, const char* ip, int16_t port, struct RtpPacket 
         {
             rtpPacket->payload[0] = (naluType & 0x60) | 28;
             rtpPacket->payload[1] = naluType & 0x1F;
-            rtpPacket->payload[2] |= 0x40;    // end
+            rtpPacket->payload[1] |= 0x40;    // end
 
-            memcpy(rtpPacket->payload + 2, frame + pos, remainPktSize);
+            memcpy(rtpPacket->payload + 2, frame + pos, remainPktSize+2);
             ret = RtpSendPacket(socket, ip, port, rtpPacket, remainPktSize + 2);
-            std::cout << "RtpSendPacket3 ret:"<<ret<<std::endl;
+            //std::cout << "RtpSendPacket3 ret:"<<ret<<std::endl;
             if (ret < 0)
             {
                 return -1;

@@ -8,6 +8,7 @@
  * @Description: rtp 操作实现
  */
 #include "rtp.h"
+#include <iostream>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -38,16 +39,17 @@ int RtpSendPacket(int socket, const char* ip, int16_t port, struct RtpPacket* rt
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = inet_addr(ip);
 
+    std::cout << "req:"<<rtpPacket->rtpHeader.seq<<";timestamp:"<<rtpPacket->rtpHeader.timestamp << ";ssrc:" << rtpPacket->rtpHeader.ssrc << std::endl;
     rtpPacket->rtpHeader.seq = htons(rtpPacket->rtpHeader.seq);
-    rtpPacket->rtpHeader.timestamp = htons(rtpPacket->rtpHeader.timestamp);
-    rtpPacket->rtpHeader.ssrc = htons(rtpPacket->rtpHeader.ssrc);
+    rtpPacket->rtpHeader.timestamp = htons(0x12222);
+    rtpPacket->rtpHeader.ssrc = htons(0x22222);
 
     ret = sendto(socket, (void*)rtpPacket, dataSize + RTP_HEADER_SIZE, 0, (struct sockaddr*)&addr, sizeof(addr));
 
     rtpPacket->rtpHeader.seq = ntohs(rtpPacket->rtpHeader.seq);
     rtpPacket->rtpHeader.timestamp = ntohl(rtpPacket->rtpHeader.timestamp);
     rtpPacket->rtpHeader.ssrc = ntohl(rtpPacket->rtpHeader.ssrc);
-
+    std::cout << "2 req:" << rtpPacket->rtpHeader.seq << ";timestamp:" << rtpPacket->rtpHeader.timestamp << ";ssrc:" << rtpPacket->rtpHeader.ssrc << std::endl;
 
     return ret;
 }

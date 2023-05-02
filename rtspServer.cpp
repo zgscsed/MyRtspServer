@@ -144,7 +144,7 @@ void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 				
 				frameSize -= startCode;
 				int ret = RtpSendH264Frame(session->serverRtpFd_.getFd(), clientIp, session->clientRtpPort_, rtpPacket, frame+startCode, frameSize);
-				std::cout <<"send rtp:"<< ret<<std::endl;
+				//std::cout <<"send rtp:"<< ret<<std::endl;
 				rtpPacket->rtpHeader.timestamp += 90000/25;
 
 				usleep(1000*1000/25);
@@ -174,7 +174,7 @@ void RtspServer::start()
 	while (1)
 	{
 		int clientSockfd;
-		char clientIP[40];
+		char *clientIP = "192.168.1.7";
 		int clientPort;
 
 		struct sockaddr_in clientaddr;
@@ -182,12 +182,21 @@ void RtspServer::start()
 		//连接一个客户端后
 		if ((clientSockfd = serverSockfd_.accept(clientaddr)) > 0)
 		{
+			// 获取对端 IP 地址和端口号
+			struct sockaddr_in peer_addr;
+			socklen_t peer_addr_len = sizeof(peer_addr);
+			getpeername(clientSockfd, (struct sockaddr*)&peer_addr, &peer_addr_len);
+
+			// 将 IP 地址转换成字符串格式
+			char peer_ip[INET_ADDRSTRLEN];
+			inet_ntop(AF_INET, &peer_addr.sin_addr, peer_ip, sizeof(peer_ip));
 			//解析客户端的ip和端口
-			std::cout << "new clinet from ip: " << inet_ntoa(clientaddr.sin_addr) 
+			//char* clientIp = inet_ntoa(clientaddr.sin_addr);
+			std::cout << "new clinet from ip: " << peer_ip
 				<< ":" << ntohs(clientaddr.sin_port) << std::endl;
 
 			//通信，rtsp的交互过程
-			messagesProcess(clientSockfd, clientIP);
+			messagesProcess(clientSockfd, peer_ip);
 
 		}
 	}
