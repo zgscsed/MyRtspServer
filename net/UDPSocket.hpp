@@ -1,12 +1,12 @@
-/*
+ï»¿/*
  * Copyright (C) 2023 zgscsed. All rights reserved.
  * @filename: UDPSocket.hpp
  * @Author: zgscsed
  * @Date: 2021-04-25 13:55:09
  * @LastEditors: zgscsed
- * @LastEditTime: 2023Äê4ÔÂ17ÈÕ22:50:56
- * @Description: socket ×ÓÀà
-	ÔÚ UDPsocket ÀàÖĞ£¬ÎÒÃÇÍ¨¹ı¼Ì³Ğ Socket Àà²¢Ìí¼ÓĞÂµÄ·½·¨ sendto() ºÍ recvfrom() À´ÊµÏÖ UDP µÄ·¢ËÍºÍ½ÓÊÕ¹¦ÄÜ
+ * @LastEditTime: 2023å¹´4æœˆ17æ—¥22:50:56
+ * @Description: socket å­ç±»
+	åœ¨ UDPsocket ç±»ä¸­ï¼Œæˆ‘ä»¬é€šè¿‡ç»§æ‰¿ Socket ç±»å¹¶æ·»åŠ æ–°çš„æ–¹æ³• sendto() å’Œ recvfrom() æ¥å®ç° UDP çš„å‘é€å’Œæ¥æ”¶åŠŸèƒ½
  */
 #ifndef UDP_SOCKET_HPP_
 #define UDP_SOCKET_HPP_
@@ -17,8 +17,13 @@ public:
     UDPSocket();
     virtual ~UDPSocket();
 
-    void sendto(const void* buf, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen);
-    ssize_t recvfrom(void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen);
+    void Sendto(const void* buf, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen);
+    ssize_t Recvfrom(void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen);
+
+    // ç”¨äºè®¾ç½® UDP socket æ˜¯å¦å¯ç”¨äº†å¹¿æ’­
+    void SetBroadcast(bool broadcast);
+    // ç”¨äºè®¾ç½® UDP socket æ˜¯å¦å¯ç”¨äº†ç»„æ’­ï¼Œå®ƒä»¬ä¼šå°† UDP socket åŠ å…¥åˆ°ä¸€ä¸ªç»„æ’­ç»„ä¸­
+    void SetMulticast(const std::string& multicast_addr, const std::string& interface_addr);
 };
 
 #endif //UDP_SOCKET_HPP_

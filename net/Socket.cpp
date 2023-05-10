@@ -1,4 +1,17 @@
-#include "Socket.hpp"
+/*
+ * Copyright (C) 2023 zgscsed. All rights reserved.
+ * @filename: Socket.cpp
+ * @Author: zgscsed
+ * @Date: 2021-04-25 13:55:09
+ * @LastEditors: zgscsed
+ * @LastEditTime: 2023年4月16日23:14:33
+ * @Description: socket 基类
+	在基类 Socket 中定义了一些常用的 socket 操作函数，
+	包括 bind()、listen()、accept()、connect()、send()、recv() 和 setsockopt() 等。
+	同时，在基类中定义了一个 fd_ 变量，用于保存 socket 描述符。
+ */
+
+#include "net/Socket.hpp"
 #include <iostream>
 
 #include <iostream>
