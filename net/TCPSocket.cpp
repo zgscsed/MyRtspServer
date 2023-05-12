@@ -5,18 +5,18 @@
 
 #include <iostream>
 
-TCPsocket::TCPsocket() : Socket(AF_INET, SOCK_STREAM, 0)
+TCPSocket::TCPSocket() : Socket(AF_INET, SOCK_STREAM, 0)
 {
 
 }
 
-TCPsocket::~TCPsocket()
+TCPSocket::~TCPSocket()
 {
 
 }
 
 // 设置为非阻塞
-void TCPsocket::SetNonblocking(bool nonblocking)
+void TCPSocket::SetNonblocking(bool nonblocking)
 {
     int opts = fcntl(fd_, F_GETFL);              //获得fd文件的状态标志参数
     if (opts < 0)
@@ -33,7 +33,7 @@ void TCPsocket::SetNonblocking(bool nonblocking)
     std::cout << "server setnonblocking..." << std::endl;
 }
 
-void TCPsocket::Shutdown(int how)
+void TCPSocket::Shutdown(int how)
 {
     if (::shutdown(fd_, how) == -1)
     {
@@ -41,7 +41,7 @@ void TCPsocket::Shutdown(int how)
     }
 }
 
-void TCPsocket::Sendall(const void* buf, size_t len, int flags)
+void TCPSocket::Sendall(const void* buf, size_t len, int flags)
 {
     ssize_t total_sent = 0;
     while (total_sent < len) {
@@ -53,7 +53,7 @@ void TCPsocket::Sendall(const void* buf, size_t len, int flags)
         total_sent += ret;
     }
 }
-ssize_t TCPsocket::Recv(void* buf, size_t len, int flags)
+ssize_t TCPSocket::Recv(void* buf, size_t len, int flags)
 {
     ssize_t ret = ::recv(fd_, buf, len, flags);
     if (ret == -1)

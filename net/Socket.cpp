@@ -39,6 +39,25 @@ Socket::~Socket()
 	std::cout << "server socket ~Socket..." << std::endl;
 }
 
+int Socket::Bind(int port)
+{
+	struct sockaddr_in serveraddr;
+	memset(&serveraddr, 0, sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	serveraddr.sin_port = htons(port);
+
+	int res = bind(fd_, (struct  sockaddr*)&serveraddr, sizeof(serveraddr));
+	if (res == -1)
+	{
+		Close();
+		perror("error bind");
+		exit(1);
+	}
+	std::cout << "server bindaddress..." << std::endl;
+
+	return res;
+}
 int Socket::Bind(const struct sockaddr* addr, socklen_t addrlen)
 {
 	int res = bind(fd_, addr, addrlen);
@@ -61,6 +80,23 @@ int Socket::Listen(int backlog)
 		perror("error listen");
 	}
 	return res;
+}
+
+//获取连接
+int Socket::Accept(struct sockaddr_in& clientaddr)
+{
+	socklen_t lengthofsockaddr = sizeof(clientaddr);
+	int clientfd = ::accept(fd_, (struct sockaddr*)&clientaddr, &lengthofsockaddr);
+	if (clientfd < 0)
+	{
+		if (errno == EAGAIN)
+		{
+			return 0;
+		}
+
+		return clientfd;
+	}
+	return clientfd;
 }
 int Socket::Accept(struct sockaddr* addr, socklen_t* addrlen)
 {
@@ -108,6 +144,7 @@ void Socket::SetReuseAddr()
 	int on = 1;
 	setsockopt(fd_, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 }
+
 void Socket::SetSockOpt(int level, int optname, const void* optval, socklen_t optlen)
 {
 	if (::setsockopt(fd_, level, optname, optval, optlen) == -1) {
@@ -119,4 +156,42 @@ void Socket::Close()
 {
 	::close(fd_);
 	std::cout << "server socket Close..." << std::endl;
+}
+
+//判断创建套接字是否成功
+bool Socket::IsCreate()
+{
+	if (fd_ == -1)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+//输出当前套接字ip和端口
+void Socket::PrintIPAndPort()
+{
+	sockaddr_storage storage;                       // 能够适应不同种类的地址协议结构
+	socklen_t   sock_len = sizeof(storage);         // 必须给初值
+	int ret = getsockname(fd_, (sockaddr*)&storage, &sock_len);        //根据fd得到地址信息
+	if (ret < 0)
+	{
+		std::cout << "getsockname error :" << errno << std::endl;
+		return;
+	}
+
+	if (storage.ss_family == AF_INET)
+	{
+		sockaddr_in* addr = (sockaddr_in*)&storage;
+		std::cout << "local addr: " << inet_ntoa(addr->sin_addr) << ":" << ntohs(addr->sin_port) << std::endl;
+	}
+	else if (storage.ss_family == AF_INET6)
+	{
+		sockaddr_in6* addr = (sockaddr_in6*)&storage;
+		char ip[INET6_ADDRSTRLEN];
+		inet_ntop(AF_INET6, &addr->sin6_addr, ip, sizeof(addr));
+		std::cout << "local addr: " << ip << ":" << ntohs(addr->sin6_port) << std::endl;
+
+	}
 }

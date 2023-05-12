@@ -24,7 +24,7 @@ desc: rtsp服务器的会话解析类，实现解析rstp交互
 #include <string>
 
 #include "rtsp/RtspParser.hpp"
-#include "udpSocket.h"
+#include "net/UDPSocket.hpp"
 
 //Rtsp 请求消息结构体
 typedef struct _RtspRequestContext {
@@ -61,8 +61,8 @@ public:
 
 
 // private:
-	UdpSocket serverRtpFd_;                     //udp传输rtp数据
-	UdpSocket serverRtcpFd_;                    //udp传输rtcp数据
+	UDPSocket serverRtpFd_;                     //udp传输rtp数据
+	UDPSocket serverRtcpFd_;                    //udp传输rtcp数据
 
 	int clientRtpPort_;
 	int clientRtcpPort_;

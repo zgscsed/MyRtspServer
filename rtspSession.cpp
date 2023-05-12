@@ -14,19 +14,19 @@ RtspSession::RtspSession(int rtpPort, int rtcpPort)
 	: serverRtpFd_(),
 	serverRtcpFd_()
 {
-	serverRtpFd_.setReuseAddr();
-	serverRtpFd_.bindAddr(rtpPort);
+	serverRtpFd_.SetReuseAddr();
+	serverRtpFd_.Bind(rtpPort);
 
-	serverRtcpFd_.setReuseAddr();
-	serverRtcpFd_.bindAddr(rtcpPort);
+	serverRtcpFd_.SetReuseAddr();
+	serverRtcpFd_.Bind(rtcpPort);
 
 	this->serverRtpPort_ = rtpPort;
 	this->serverRtcpPort_ = rtcpPort;
 }
 RtspSession::~RtspSession()
 {
-	serverRtpFd_.close();
-	serverRtcpFd_.close();
+	serverRtpFd_.Close();
+	serverRtcpFd_.Close();
 }
 
 //解析消息

@@ -15,10 +15,10 @@
 
 #include "net/Socket.hpp"
 
-class TCPsocket : public Socket {
+class TCPSocket : public Socket {
 public:
-    TCPsocket();
-    virtual ~TCPsocket();
+    TCPSocket();
+    virtual ~TCPSocket();
 
     // ÉèÖÃÎª·Ç×èÈû
     void SetNonblocking(bool nonblocking);

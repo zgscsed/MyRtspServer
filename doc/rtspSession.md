@@ -23,3 +23,7 @@ RtspSession类，管理rtsp会话，一个会话对应一个实例对象。
 **rtspProcess**
 
 处理请求消息，并回复响应
+
+## Socket类设计
+
+Socket类，实现对套接字的封装， 包括 bind()、listen()、accept()、connect()、send()、recv() 和 setsockopt()基本函数。

@@ -60,9 +60,9 @@ RtspServer::RtspServer(int serverport, int rtpPort, int rtcpPort)
 	:serverSockfd_()
 {
 	//设置服务器套接字
-	serverSockfd_.setReuseAddr();
-	serverSockfd_.bindAddr(serverport);
-	serverSockfd_.listen();
+	serverSockfd_.SetReuseAddr();
+	serverSockfd_.Bind(serverport);
+	serverSockfd_.Listen(8888);
 
 	session = new RtspSession(rtpPort, rtcpPort);
 
@@ -71,7 +71,7 @@ RtspServer::RtspServer(int serverport, int rtpPort, int rtcpPort)
 }
 RtspServer::~RtspServer()
 {
-	serverSockfd_.close();
+	serverSockfd_.Close();
 	delete session;
 
 }
@@ -143,7 +143,7 @@ void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 				}
 				
 				frameSize -= startCode;
-				int ret = RtpSendH264Frame(session->serverRtpFd_.getFd(), clientIp, session->clientRtpPort_, rtpPacket, frame+startCode, frameSize);
+				int ret = RtpSendH264Frame(session->serverRtpFd_.GetFd(), clientIp, session->clientRtpPort_, rtpPacket, frame+startCode, frameSize);
 				//std::cout <<"send rtp:"<< ret<<std::endl;
 				rtpPacket->rtpHeader.timestamp += 90000/25;
 
@@ -162,14 +162,14 @@ void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 void RtspServer::start()
 {
 	//第一步
-	if (!serverSockfd_.isCreate())
+	if (!serverSockfd_.IsCreate())
 	{
 		//创建套接字有问题，直接返回
 		return;
 	}
 
 	//第二步，开始接收客户端的连接请求
-	serverSockfd_.printIPAndPort();
+	serverSockfd_.PrintIPAndPort();
 
 	while (1)
 	{
@@ -180,7 +180,7 @@ void RtspServer::start()
 		struct sockaddr_in clientaddr;
 
 		//连接一个客户端后
-		if ((clientSockfd = serverSockfd_.accept(clientaddr)) > 0)
+		if ((clientSockfd = serverSockfd_.Accept(clientaddr)) > 0)
 		{
 			// 获取对端 IP 地址和端口号
 			struct sockaddr_in peer_addr;

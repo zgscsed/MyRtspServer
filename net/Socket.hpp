@@ -22,8 +22,12 @@ public:
     Socket(int domain, int type, int protocol);
     virtual ~Socket();
 
+    int Bind(int port);
     int Bind(const struct sockaddr* addr, socklen_t addrlen);
     int Listen(int backlog);
+
+    //获取连接
+    int Accept(struct sockaddr_in& clientaddr);
     int Accept(struct sockaddr* addr, socklen_t* addrlen);
     int Connect(const struct sockaddr* addr, socklen_t addrlen);
     ssize_t Send(const void* buf, size_t len, int flags);
@@ -36,6 +40,13 @@ public:
     void Close();
 
     int GetFd() const { return fd_; }
+
+
+    //判断创建套接字是否成功
+    bool IsCreate();
+
+    //输出当前套接字ip和端口
+    void PrintIPAndPort();
 
 protected:
     int fd_;

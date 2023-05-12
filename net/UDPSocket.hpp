@@ -12,6 +12,8 @@
 #define UDP_SOCKET_HPP_
 
 #include "Socket.hpp"
+
+#include <string>
 class UDPSocket : public Socket {
 public:
     UDPSocket();
