@@ -1,20 +1,20 @@
-/*
+ï»¿/*
  * Copyright (C) 2023 zgscsed. All rights reserved.
  * @filename: Channel.cpp
  * @Author: zgscsed
- * @Date: 2023Äê5ÔÂ27ÈÕ22:12:27
+ * @Date: 2023å¹´5æœˆ27æ—¥22:12:27
  * @LastEditors: zgscsed
- * @LastEditTime: 2023Äê5ÔÂ27ÈÕ22:12:30
- * @Description: Channel Àà
-	·â×°fdµÄ¶ÁĞ´´¦Àíº¯Êı£¬ ĞèÒªÉèÖÃ¶ÁĞ´ÊÂ¼şµÄ»Øµ÷º¯Êı¡£
+ * @LastEditTime: 2023å¹´5æœˆ27æ—¥22:12:30
+ * @Description: Channel ç±»
+	å°è£…fdçš„è¯»å†™å¤„ç†å‡½æ•°ï¼Œ éœ€è¦è®¾ç½®è¯»å†™äº‹ä»¶çš„å›è°ƒå‡½æ•°ã€‚
 
-// EPOLLIN £º±íÊ¾¶ÔÓ¦µÄÎÄ¼şÃèÊö·û¿ÉÒÔ¶Á£¨°üÀ¨¶Ô¶ËSOCKETÕı³£¹Ø±Õ£©£»
-// EPOLLOUT£º±íÊ¾¶ÔÓ¦µÄÎÄ¼şÃèÊö·û¿ÉÒÔĞ´£»
-// EPOLLPRI£º±íÊ¾¶ÔÓ¦µÄÎÄ¼şÃèÊö·ûÓĞ½ô¼±µÄÊı¾İ¿É¶Á£¨ÕâÀïÓ¦¸Ã±íÊ¾ÓĞ´øÍâÊı¾İµ½À´£©£»
-// EPOLLERR£º±íÊ¾¶ÔÓ¦µÄÎÄ¼şÃèÊö·û·¢Éú´íÎó£»
-// EPOLLHUP£º±íÊ¾¶ÔÓ¦µÄÎÄ¼şÃèÊö·û±»¹Ò¶Ï£»
-// EPOLLET£º ½«EPOLLÉèÎª±ßÔµ´¥·¢(Edge Triggered)Ä£Ê½£¬ÕâÊÇÏà¶ÔÓÚË®Æ½´¥·¢(Level Triggered)À´ËµµÄ¡£
-// EPOLLONESHOT£ºÖ»¼àÌıÒ»´ÎÊÂ¼ş£¬µ±¼àÌıÍêÕâ´ÎÊÂ¼şÖ®ºó£¬Èç¹û»¹ĞèÒª¼ÌĞø¼àÌıÕâ¸ösocketµÄ»°£¬ĞèÒªÔÙ´Î°ÑÕâ¸ösocket¼ÓÈëµ½EPOLL¶ÓÁĞÀï
+// EPOLLIN ï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦å¯ä»¥è¯»ï¼ˆåŒ…æ‹¬å¯¹ç«¯SOCKETæ­£å¸¸å…³é—­ï¼‰ï¼›
+// EPOLLOUTï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦å¯ä»¥å†™ï¼›
+// EPOLLPRIï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦æœ‰ç´§æ€¥çš„æ•°æ®å¯è¯»ï¼ˆè¿™é‡Œåº”è¯¥è¡¨ç¤ºæœ‰å¸¦å¤–æ•°æ®åˆ°æ¥ï¼‰ï¼›
+// EPOLLERRï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦å‘ç”Ÿé”™è¯¯ï¼›
+// EPOLLHUPï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦è¢«æŒ‚æ–­ï¼›
+// EPOLLETï¼š å°†EPOLLè®¾ä¸ºè¾¹ç¼˜è§¦å‘(Edge Triggered)æ¨¡å¼ï¼Œè¿™æ˜¯ç›¸å¯¹äºæ°´å¹³è§¦å‘(Level Triggered)æ¥è¯´çš„ã€‚
+// EPOLLONESHOTï¼šåªç›‘å¬ä¸€æ¬¡äº‹ä»¶ï¼Œå½“ç›‘å¬å®Œè¿™æ¬¡äº‹ä»¶ä¹‹åï¼Œå¦‚æœè¿˜éœ€è¦ç»§ç»­ç›‘å¬è¿™ä¸ªsocketçš„è¯ï¼Œéœ€è¦å†æ¬¡æŠŠè¿™ä¸ªsocketåŠ å…¥åˆ°EPOLLé˜Ÿåˆ—é‡Œ
  */
 
 #include "Channel.hpp"
@@ -33,18 +33,18 @@ Channel::~Channel()
 
 }
 
-// ÉèÖÃÎÄ¼şÃèÊö·û
+// è®¾ç½®æ–‡ä»¶æè¿°ç¬¦
 inline void Channel::SetFd(int fd)
 {
 	fd_ = fd;
 }
-// »ñÈ¡ÎÄ¼şÃèÊö·û
+// è·å–æ–‡ä»¶æè¿°ç¬¦
 inline int Channel::GetFd() const
 {
 	return fd_;
 }
 
-// ÉèÖÃ´¥·¢ÊÂ¼ş
+// è®¾ç½®è§¦å‘äº‹ä»¶
 inline void Channel::SetEvents(uint32_t events)
 {
 	events_ = events;
@@ -55,19 +55,19 @@ inline uint32_t Channel::GetEvents() const
 	return events_;
 }
 
-// ÊÂ¼ş·Ö·¢´¦Àí
+// äº‹ä»¶åˆ†å‘å¤„ç†
 void Channel::HandleEvent()
 {
-	if (events_ & EPOLLRDHUP)    // Òì³£¹Ø±ÕÊÂ¼ş
+	if (events_ & EPOLLRDHUP)    // å¼‚å¸¸å…³é—­äº‹ä»¶
 	{
 		std::cout << "Event EPOLLRDHUP" << std::endl;
 		closeCallback_();
 	}
-	else if (events_ & (EPOLLIN | EPOLLPRI))   // ¶ÁÊÂ¼ş£¬ ¶Ô¶ËÓĞÊı¾İ»òÕßÕı³£¹Ø±Õ
+	else if (events_ & (EPOLLIN | EPOLLPRI))   // è¯»äº‹ä»¶ï¼Œ å¯¹ç«¯æœ‰æ•°æ®æˆ–è€…æ­£å¸¸å…³é—­
 	{
 		readCallback_();
 	}
-	else if (events_ & EPOLLOUT)   // Ğ´ÊÂ¼ş
+	else if (events_ & EPOLLOUT)   // å†™äº‹ä»¶
 	{
 		writeCallback_();
 	}
@@ -78,25 +78,25 @@ void Channel::HandleEvent()
 	}
 }
 
-// ÉèÖÃ¶ÁÊÂ¼ş»Øµ÷
+// è®¾ç½®è¯»äº‹ä»¶å›è°ƒ
 inline void Channel::SetReadCallback(const Callback& cb)
 {
 	readCallback_ = cb;
 }
 
-// ÉèÖÃĞ´ÊÂ¼ş»Øµ÷
+// è®¾ç½®å†™äº‹ä»¶å›è°ƒ
 inline void Channel::SetWriteCallback(const Callback& cb)
 {
 	writeCallback_ = cb;
 }
 
-// ÉèÖÃ´íÎóÊÂ¼ş»Øµ÷
+// è®¾ç½®é”™è¯¯äº‹ä»¶å›è°ƒ
 inline void Channel::SetErrorCallback(const Callback& cb)
 {
 	errorCallback_ = cb;
 }
 
-// ÉèÖÃ¹Ø±ÕÊÂ¼ş»Øµ÷
+// è®¾ç½®å…³é—­äº‹ä»¶å›è°ƒ
 inline void Channel::SetCloseCallback(const Callback& cb)
 {
 	closeCallback_ = cb;
