@@ -1,9 +1,7 @@
-
-#include "net/TCPSocket.hpp"
-
 #include <fcntl.h>
-
 #include <iostream>
+
+#include "TCPSocket.hpp"
 
 TCPSocket::TCPSocket() : Socket(AF_INET, SOCK_STREAM, 0)
 {

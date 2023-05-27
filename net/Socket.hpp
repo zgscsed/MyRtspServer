@@ -30,6 +30,7 @@ public:
     int Accept(struct sockaddr_in& clientaddr);
     int Accept(struct sockaddr* addr, socklen_t* addrlen);
     int Connect(const struct sockaddr* addr, socklen_t addrlen);
+    // flags 默认0 和 read 和 write函数效果一致
     ssize_t Send(const void* buf, size_t len, int flags);
     ssize_t Recv(void* buf, size_t len, int flags);
 

@@ -12,7 +12,7 @@
  */
 #include <iostream>
 
-#include "net/UDPSocket.hpp"
+#include "UDPSocket.hpp"
 
 
 UDPSocket::UDPSocket() : Socket(AF_INET, SOCK_DGRAM, 0)

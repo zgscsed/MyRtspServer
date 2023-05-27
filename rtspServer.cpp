@@ -65,9 +65,6 @@ RtspServer::RtspServer(int serverport, int rtpPort, int rtcpPort)
 	serverSockfd_.Listen(8888);
 
 	session = new RtspSession(rtpPort, rtcpPort);
-
-
-
 }
 RtspServer::~RtspServer()
 {
@@ -79,7 +76,6 @@ RtspServer::~RtspServer()
 //rtsp数据接收和发送过程
 void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 {
-
 	// RtspRequestContext rtspRequestContet;              //请求消息结构体
 	RtspMessage *rtspMessage = nullptr;
 	//RtspResponseContext rtspResponseContext;           //响应消息结构体

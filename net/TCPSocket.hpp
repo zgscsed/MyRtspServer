@@ -13,7 +13,7 @@
 #ifndef TCP_SOCKET_HPP_
 #define TCP_SOCKET_HPP_
 
-#include "net/Socket.hpp"
+#include "Socket.hpp"
 
 class TCPSocket : public Socket {
 public:
