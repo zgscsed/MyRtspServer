@@ -27,11 +27,11 @@ public:
 	// 设置文件描述符
 	void SetFd(int fd);
 	// 获取文件描述符
-	int GetFd() const;
+	int GetFd();
 
 	// 设置触发事件
 	void SetEvents(uint32_t events);
-	uint32_t GetEvents() const;
+	uint32_t GetEvents();
 
 	// 事件分发处理
 	void HandleEvent();

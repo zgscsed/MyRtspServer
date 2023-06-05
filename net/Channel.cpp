@@ -34,23 +34,23 @@ Channel::~Channel()
 }
 
 // 设置文件描述符
-inline void Channel::SetFd(int fd)
+void Channel::SetFd(int fd)
 {
 	fd_ = fd;
 }
 // 获取文件描述符
-inline int Channel::GetFd() const
+int Channel::GetFd()
 {
 	return fd_;
 }
 
 // 设置触发事件
-inline void Channel::SetEvents(uint32_t events)
+void Channel::SetEvents(uint32_t events)
 {
 	events_ = events;
 }
 
-inline uint32_t Channel::GetEvents() const
+uint32_t Channel::GetEvents()
 {
 	return events_;
 }
@@ -79,25 +79,25 @@ void Channel::HandleEvent()
 }
 
 // 设置读事件回调
-inline void Channel::SetReadCallback(const Callback& cb)
+void Channel::SetReadCallback(const Callback& cb)
 {
 	readCallback_ = cb;
 }
 
 // 设置写事件回调
-inline void Channel::SetWriteCallback(const Callback& cb)
+void Channel::SetWriteCallback(const Callback& cb)
 {
 	writeCallback_ = cb;
 }
 
 // 设置错误事件回调
-inline void Channel::SetErrorCallback(const Callback& cb)
+void Channel::SetErrorCallback(const Callback& cb)
 {
 	errorCallback_ = cb;
 }
 
 // 设置关闭事件回调
-inline void Channel::SetCloseCallback(const Callback& cb)
+void Channel::SetCloseCallback(const Callback& cb)
 {
 	closeCallback_ = cb;
 }

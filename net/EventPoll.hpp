@@ -12,14 +12,15 @@
 #ifndef EVENT_POLL_HPP_
 #define EVENT_POLL_HPP_
 
+
+#include "Channel.hpp"
+
 #include <iostream>
 #include <vector>
 #include <map>
 #include <mutex>
 
 #include <sys/epoll.h>
-
-#include "Channel.hpp"
 
 class EventPoll {
 public:

@@ -1,20 +1,21 @@
-/*
+ï»¿/*
  * Copyright (C) 2023 zgscsed. All rights reserved.
  * @filename: EventLoop.cpp
  * @Author: zgscsed
- * @Date: 2023Äê5ÔÂ28ÈÕ16:54:01
+ * @Date: 2023å¹´5æœˆ28æ—¥16:54:01
  * @LastEditors: zgscsed
- * @LastEditTime: 2023Äê5ÔÂ28ÈÕ16:54:05
- * @Description: EventLoop Àà
-	io¸´ÓÃ´¦ÀíÁ÷³Ì³éÏó£¬µÈ´ıÊÂ¼ş£¬´¦ÀíÊÂ¼ş¡£Ö´ĞĞÈÎÎñ
+ * @LastEditTime: 2023å¹´5æœˆ28æ—¥16:54:05
+ * @Description: EventLoop ç±»
+	ioå¤ç”¨å¤„ç†æµç¨‹æŠ½è±¡ï¼Œç­‰å¾…äº‹ä»¶ï¼Œå¤„ç†äº‹ä»¶ã€‚æ‰§è¡Œä»»åŠ¡
  */
 
 
 #include "EventLoop.hpp"
+
 #include <sys/eventfd.h>
 #include <unistd.h>
 
- //²ÎÕÕmuduo£¬ÊµÏÖ¿çÏß³Ì»½ĞÑ
+ //å‚ç…§muduoï¼Œå®ç°è·¨çº¿ç¨‹å”¤é†’
 int CreateEventFd()
 {
 	int evtfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
@@ -48,7 +49,7 @@ EventLoop::~EventLoop()
 }
 
 
-// Ö´ĞĞÊÂ¼şÑ­»·
+// æ‰§è¡Œäº‹ä»¶å¾ªç¯
 void EventLoop::Loop()
 {
 	quit_ = false;
@@ -57,65 +58,65 @@ void EventLoop::Loop()
 		poller_.Poll(activeChannelList_);
 		for (Channel* pChannel : activeChannelList_)
 		{
-			pChannel->HandleEvent();       // ´¦ÀíÊÂ¼ş
+			pChannel->HandleEvent();       // å¤„ç†äº‹ä»¶
 		}
 
 		activeChannelList_.clear();
 
-		ExecuteTask();       // Ö´ĞĞÈÎÎñ
+		ExecuteTask();       // æ‰§è¡Œä»»åŠ¡
 	}
 }
 
-// Ìí¼ÓÊÂ¼ş
-inline void EventLoop::AddChannelToEventPoller(Channel* pChannel)
+// æ·»åŠ äº‹ä»¶
+void EventLoop::AddChannelToEventPoller(Channel* pChannel)
 {
 	poller_.AddChannel(pChannel);
 }
 
-// É¾³ıÊÂ¼ş
-inline void EventLoop::DeleteChannelToEventPoller(Channel* pChannel)
+// åˆ é™¤äº‹ä»¶
+void EventLoop::DeleteChannelToEventPoller(Channel* pChannel)
 {
 	poller_.DeleteChannel(pChannel);
 }
 
-// ĞŞ¸ÄÊÂ¼ş
-inline void EventLoop::ModifyChannelToEventPoller(Channel* pChannel)
+// ä¿®æ”¹äº‹ä»¶
+void EventLoop::ModifyChannelToEventPoller(Channel* pChannel)
 {
 	poller_.ModifyChannel(pChannel);
 }
 
-// ÍË³öÑ­»·
-inline void EventLoop::Quit()
+// é€€å‡ºå¾ªç¯
+void EventLoop::Quit()
 {
 	quit_ = true;
 }
 
-// »ñÈ¡Ïß³Ìid
-inline std::thread::id EventLoop::GetThreadId() const
+// è·å–çº¿ç¨‹id
+std::thread::id EventLoop::GetThreadId() const
 {
 	return tid_;
 }
 
-// »½ĞÑloop
+// å”¤é†’loop
 void EventLoop::WakeUp()
 {
 	uint64_t one = 1;
 	ssize_t n = write(wakeUpFd_, (char*)(&one), sizeof(one));
 }
 
-// »½ĞÑºó»Øµ÷
+// å”¤é†’åå›è°ƒ
 void EventLoop::ReadHandle()
 {
 	uint64_t one = 1;
 	ssize_t n = read(wakeUpFd_, &one, sizeof(one));
 }
-// »½ĞÑºó´íÎó´¦Àí
+// å”¤é†’åé”™è¯¯å¤„ç†
 void EventLoop::ErrorHandle()
 {
 	;
 }
 
-// Ìí¼ÓÈÎÎñ
+// æ·»åŠ ä»»åŠ¡
 void EventLoop::AddTask(Functor functor)
 {
 	{
@@ -123,10 +124,10 @@ void EventLoop::AddTask(Functor functor)
 		functorList_.emplace_back(functor);
 	}
 
-	WakeUp();         // ¿çÏß³Ì»½ĞÑ£¬ workerÏß³Ì»½ĞÑioÏß³Ì
+	WakeUp();         // è·¨çº¿ç¨‹å”¤é†’ï¼Œ workerçº¿ç¨‹å”¤é†’ioçº¿ç¨‹
 }
 
-// Ö´ĞĞÈÎÎñ
+// æ‰§è¡Œä»»åŠ¡
 void EventLoop::ExecuteTask()
 {
 	std::vector<Functor> functorList;

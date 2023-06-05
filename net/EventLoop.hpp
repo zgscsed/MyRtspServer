@@ -13,7 +13,6 @@
 #define EVENT_LOOP_HPP_
 
 #include "EventPoll.hpp"
-#include "Channel.hpp"
 
 #include <iostream>
 #include <vector>

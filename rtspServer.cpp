@@ -31,7 +31,7 @@ desc: rtsp服务器类，使用rtsp协议传输数据
 
 
 //接收数据
-int recvn(int fd, std::string&buf)
+int recvnn(int fd, std::string&buf)
 {
 	int nbyte = 0;
 	int readsum = 0;
@@ -48,7 +48,7 @@ int recvn(int fd, std::string&buf)
 }
 
 //发送数据
-int sendn(int fd, std::string &buf)
+int sendnn(int fd, std::string &buf)
 {
 	int length = buf.size();
 	int nbyte = write(fd, buf.c_str(), length);
@@ -87,7 +87,7 @@ void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 	while (1)
 	{
 		//接收客户端的消息
-		int readsum = recvn(clientSockfd, recvBuf);
+		int readsum = recvnn(clientSockfd, recvBuf);
 
 		//没有收到数据，说明连接有问题，直接退出
 		if (readsum <= 0)
@@ -107,7 +107,7 @@ void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 
 
 		//返回消息
-		sendn(clientSockfd, rtspResponseContext);
+		sendnn(clientSockfd, rtspResponseContext);
 
 		//播放
 		if (rtspMessage->rtspType == RTSP_PLAY)
