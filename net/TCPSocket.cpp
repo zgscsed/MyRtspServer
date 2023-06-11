@@ -14,7 +14,7 @@ TCPSocket::~TCPSocket()
 }
 
 // 设置为非阻塞
-void TCPSocket::SetNonblocking(bool nonblocking)
+void TCPSocket::SetNonblocking()
 {
     int opts = fcntl(fd_, F_GETFL);              //获得fd文件的状态标志参数
     if (opts < 0)

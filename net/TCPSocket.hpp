@@ -21,7 +21,7 @@ public:
     virtual ~TCPSocket();
 
     // ÉèÖÃÎª·Ç×èÈû
-    void SetNonblocking(bool nonblocking);
+    void SetNonblocking();
     void Shutdown(int how);
 
     void Sendall(const void* buf, size_t len, int flags);
