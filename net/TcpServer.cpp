@@ -33,7 +33,8 @@ TcpServer::TcpServer(EventLoop* loop, const int port, const int threadNum)
 	:serverSocket_(),
 	loop_(loop),
 	serverChannel_(),
-	connCount_(0)
+	connCount_(0),
+	eventLoopThreadPool_(loop, threadNum)
 {
 	// set serverSocket
 	serverSocket_.SetReuseAddr();        // ∏¥”√
