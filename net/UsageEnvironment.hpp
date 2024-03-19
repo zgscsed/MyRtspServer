@@ -13,15 +13,18 @@
 #define USAGE_ENVIRONMENT_HPP_
 
 #include "EventScheduler.hpp"
+#include "ThreadPool.hpp"
 class UsageEnvironment {
 public:
-	static UsageEnvironment* CreateNew(EventScheduler* scheduler);
-	UsageEnvironment(EventScheduler* scheduler);
+	static UsageEnvironment* CreateNew(EventScheduler* scheduler, ThreadPool* pool);
+	UsageEnvironment(EventScheduler* scheduler, ThreadPool* pool);
 	~UsageEnvironment();
 
 	EventScheduler* Scheduler();
+	ThreadPool* CurThreadPool();
 
 private:
 	EventScheduler* scheduler_;
+	ThreadPool *threadPool_;
 };
 #endif // !USAGE_ENVIRONMENT_HPP_

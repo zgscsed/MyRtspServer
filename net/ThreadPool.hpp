@@ -24,8 +24,8 @@
 class ThreadPool {
 public:
 	using Task = std::function<void()>;       // 执行任务，简单使用function实现
-
-	ThreadPool(int threadNum = 0);
+	static ThreadPool* Create(int threadNum = 0);
+	ThreadPool(int threadNum);
 	~ThreadPool();
 
 	// 启动线程池

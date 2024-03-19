@@ -27,3 +27,15 @@ RtspSession类，管理rtsp会话，一个会话对应一个实例对象。
 ## Socket类设计
 
 Socket类，实现对套接字的封装， 包括 bind()、listen()、accept()、connect()、send()、recv() 和 setsockopt()基本函数。
+
+
+## UsageEnvironment类设计
+UsageEnvironment 类，环境变量类，提供服务运行的环境，事件调度，定时器，线程池等功能。
+
+## EventScheduler类
+EventScheduler 类，事件调度类，封装了事件循环类，负责socket监听，并且执行回调函数，支持添加异步事件。
+
+## MediaSource类
+MediaSource 类，视频源基类   
+	提供获取视频源帧数据的接口GetFrame()  
+	不同编码的视频源继承基类实现readFrame虚函数

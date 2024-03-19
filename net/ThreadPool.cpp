@@ -12,7 +12,11 @@
 
 #include <iostream>
 
-
+ThreadPool* ThreadPool::Create(int threadNum)
+{
+	ThreadPool* pool = new ThreadPool(threadNum);
+	return pool;
+}
 ThreadPool::ThreadPool(int threadNum)
 	:started_(false),
 	threadNum_(threadNum),

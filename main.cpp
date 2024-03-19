@@ -17,8 +17,11 @@ int main(void)
 	EventLoop* loop = new EventLoop();
 	EventScheduler* scheduler = new EventScheduler(loop);
 
+	// 线程池
+	ThreadPool* pool = ThreadPool::Create(4);
+
 	// 初始化环境变量
-	UsageEnvironment* env = UsageEnvironment::CreateNew(scheduler);
+	UsageEnvironment* env = UsageEnvironment::CreateNew(scheduler, pool);
 	std::cout << "RTSP服务器项目" << std::endl;
 
 	// RtspServer 重新写
