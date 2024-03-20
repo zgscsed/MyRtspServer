@@ -39,3 +39,7 @@ EventScheduler 类，事件调度类，封装了事件循环类，负责socket�
 MediaSource 类，视频源基类   
 	提供获取视频源帧数据的接口GetFrame()  
 	不同编码的视频源继承基类实现readFrame虚函数
+
+## H264MediaSource类
+H264MediaSource 类，h264格式的视频源
+readFrame 函数读取视频源中的一帧h264数据

@@ -20,7 +20,19 @@ MediaSource::MediaSource(UsageEnvironment* env)
 }
 MediaSource::~MediaSource()
 {
+	while (!frameInputQueue_.empty())
+	{
+		AVFrame* frame = frameInputQueue_.front();
+		delete frame;
+		frameInputQueue_.pop();
+	}
 
+	while (!frameOutputQueue_.empty())
+	{
+		AVFrame* frame = frameOutputQueue_.front();
+		delete frame;
+		frameOutputQueue_.pop();
+	}
 }
 
 AVFrame* MediaSource::GetFrame()
