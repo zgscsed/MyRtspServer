@@ -51,7 +51,7 @@ protected:
 	virtual void ReadFrame() = 0;
 	void SetFps(int fps);
 
-protected:
+
 	UsageEnvironment* env_;
 	int fps_;
 
