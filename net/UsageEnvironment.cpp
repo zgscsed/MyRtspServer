@@ -11,19 +11,20 @@
 
 #include "UsageEnvironment.hpp"
 
-UsageEnvironment* UsageEnvironment::CreateNew(EventScheduler* scheduler, ThreadPool* pool)
+UsageEnvironment* UsageEnvironment::CreateNew(EventScheduler* scheduler, ThreadPool* pool, TimerManager* timerMgr)
 {
 	if (scheduler == nullptr)
 	{
 		return nullptr;
 	}
 
-	return new UsageEnvironment(scheduler, pool);
+	return new UsageEnvironment(scheduler, pool, timerMgr);
 }
-UsageEnvironment::UsageEnvironment(EventScheduler* scheduler, ThreadPool* pool)
+UsageEnvironment::UsageEnvironment(EventScheduler* scheduler, ThreadPool* pool, TimerManager* timerMgr)
 {
 	scheduler_ = scheduler;
 	threadPool_ = pool;
+	timerMgr_ = timerMgr;
 }
 UsageEnvironment::~UsageEnvironment()
 {
@@ -40,4 +41,8 @@ EventScheduler* UsageEnvironment::Scheduler()
 ThreadPool* UsageEnvironment::CurThreadPool()
 {
 	return threadPool_;
+}
+TimerManager* UsageEnvironment::TimerMgr()
+{
+	return timerMgr_;
 }

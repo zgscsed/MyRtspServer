@@ -10,11 +10,12 @@
  */
 
 #include "EventScheduler.hpp"
+#include "base/global.hpp"
 
 EventScheduler::EventScheduler(EventLoop* loop)
 	:loop_(loop)
 {
-
+	LOG_INFO << "EventScheduler construct";
 }
 EventScheduler::~EventScheduler()
 {

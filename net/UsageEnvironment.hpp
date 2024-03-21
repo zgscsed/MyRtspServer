@@ -14,17 +14,21 @@
 
 #include "EventScheduler.hpp"
 #include "ThreadPool.hpp"
+#include "TimerManager.hpp"
 class UsageEnvironment {
 public:
-	static UsageEnvironment* CreateNew(EventScheduler* scheduler, ThreadPool* pool);
-	UsageEnvironment(EventScheduler* scheduler, ThreadPool* pool);
+	static UsageEnvironment* CreateNew(EventScheduler* scheduler, ThreadPool* pool, TimerManager* timerMgr);
+
 	~UsageEnvironment();
 
 	EventScheduler* Scheduler();
 	ThreadPool* CurThreadPool();
+	TimerManager* TimerMgr();
 
 private:
+	UsageEnvironment(EventScheduler* scheduler, ThreadPool* pool, TimerManager* timerMgr);
 	EventScheduler* scheduler_;
 	ThreadPool *threadPool_;
+	TimerManager* timerMgr_;
 };
 #endif // !USAGE_ENVIRONMENT_HPP_

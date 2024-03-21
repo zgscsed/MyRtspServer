@@ -20,9 +20,13 @@ int main(void)
 
 	// 线程池
 	ThreadPool* pool = ThreadPool::Create(4);
+	// 定时器
+	int interval = 1;
+	int slotnum = 1024;
+	TimerManager* timerMgr = TimerManager::Create(interval, slotnum);
 
 	// 初始化环境变量
-	UsageEnvironment* env = UsageEnvironment::CreateNew(scheduler, pool);
+	UsageEnvironment* env = UsageEnvironment::CreateNew(scheduler, pool, timerMgr);
 
 	// 视频源
 	MediaSource* mediaSource = H264MediaSource::Create(env, "test.h264");

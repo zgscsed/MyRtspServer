@@ -9,7 +9,7 @@
 	线程池，执行一些定时任务。
  */
 #include "ThreadPool.hpp"
-
+#include "base/global.hpp"
 #include <iostream>
 
 ThreadPool* ThreadPool::Create(int threadNum)
@@ -25,7 +25,7 @@ ThreadPool::ThreadPool(int threadNum)
 	mutex_(),
 	condition_()
 {
-
+	LOG_INFO << "ThreadPool construct threadNum: " << threadNum;
 }
 ThreadPool::~ThreadPool()
 {

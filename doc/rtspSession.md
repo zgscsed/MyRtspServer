@@ -43,3 +43,6 @@ MediaSource 类，视频源基类
 ## H264MediaSource类
 H264MediaSource 类，h264格式的视频源
 readFrame 函数读取视频源中的一帧h264数据
+
+## TimerManager 类
+定时器管理类，使用时间轮机制轮询定时器。
