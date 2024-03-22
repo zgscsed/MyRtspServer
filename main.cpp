@@ -8,6 +8,7 @@ desc:
 #include <fstream>
 #include "rtspServer.h"
 #include "net/EventLoop.hpp"
+#include "rtsp/H264RtpSink.hpp"
 #include "rtsp/H264MediaSource.hpp"
 #include "net/EventScheduler.hpp"
 #include "net/UsageEnvironment.hpp"
@@ -30,6 +31,9 @@ int main(void)
 
 	// 视频源
 	MediaSource* mediaSource = H264MediaSource::Create(env, "test.h264");
+
+	// rtpSink 初始化
+	H264RtpSink* h264RtpSink = H264RtpSink::Create(env, mediaSource);
 
 
 	std::cout << "RTSP服务器项目" << std::endl;

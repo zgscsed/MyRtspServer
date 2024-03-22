@@ -11,6 +11,7 @@
 
 #include "MediaSource.hpp"
 #include "rtp.h"
+#include "net/Timer.hpp"
 #include <functional>
 class RtpSink
 {
@@ -27,6 +28,9 @@ protected:
 
 	// 发送rtp报文
 	void SendRtpPacket(RtpPacket* rtpPacket, int frameSize);
+
+	void Start(int ms);
+	void Stop();
 private:
 	// 定时发送rtp报文
 	void TimeoutCallback();       
@@ -45,6 +49,8 @@ protected:
 	UsageEnvironment* env_;
 	SendPacketCallback sendPacketCallback_;
 	MediaSource* mediaSource_;
+
+	Timer *timer_;
 
 };
 

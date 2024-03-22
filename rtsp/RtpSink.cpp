@@ -17,12 +17,12 @@ RtpSink::RtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadTyp
 	csrcLen(0), extension(0), padding(0), version(RTP_VESION), payloadType(payloadType),
 	marker(0), seq(0), timestamp(0), ssrc(0x88923423)
 {
-
+	timer_ = new Timer(25, Timer::TimerType::TIMER_PERIOD, std::bind(&RtpSink::TimeoutCallback, this));
 }
 
 RtpSink::~RtpSink()
 {
-
+	delete timer_;
 }
 
 // 发送rtp报文
@@ -59,4 +59,14 @@ void RtpSink::TimeoutCallback()
 	// frame使用后放回
 	mediaSource_->PutFrame(frame);
 }
+void RtpSink::Start(int interval)
+{
+	timer_->timeout_ = interval;
+	env_->TimerMgr()->AddTimer(timer_);
+}
+void RtpSink::Stop()
+{
+	env_->TimerMgr()->RemoveTimer(timer_);
+}
+
 
