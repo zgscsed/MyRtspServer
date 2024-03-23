@@ -9,6 +9,7 @@ desc:
 #include "rtspServer.h"
 #include "net/EventLoop.hpp"
 #include "rtsp/H264RtpSink.hpp"
+#include "rtsp/MediaSession.hpp"
 #include "rtsp/H264MediaSource.hpp"
 #include "net/EventScheduler.hpp"
 #include "net/UsageEnvironment.hpp"
@@ -29,11 +30,13 @@ int main(void)
 	// 初始化环境变量
 	UsageEnvironment* env = UsageEnvironment::CreateNew(scheduler, pool, timerMgr);
 
+	MediaSession* session = MediaSession::Create(env);
 	// 视频源
 	MediaSource* mediaSource = H264MediaSource::Create(env, "test.h264");
-
 	// rtpSink 初始化
 	H264RtpSink* h264RtpSink = H264RtpSink::Create(env, mediaSource);
+
+	session->AddRtpSink(1, h264RtpSink);
 
 
 	std::cout << "RTSP服务器项目" << std::endl;

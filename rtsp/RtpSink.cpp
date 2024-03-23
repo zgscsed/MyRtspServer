@@ -13,7 +13,7 @@
 #include <netinet/in.h>
 
 RtpSink::RtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadType)
-	:env_(env), mediaSource_(mediaSource), sendPacketCallback_(nullptr),
+	:env_(env), mediaSource_(mediaSource), sendPacketCallback_(nullptr), traceId_(0),
 	csrcLen(0), extension(0), padding(0), version(RTP_VESION), payloadType(payloadType),
 	marker(0), seq(0), timestamp(0), ssrc(0x88923423)
 {
@@ -25,6 +25,10 @@ RtpSink::~RtpSink()
 	delete timer_;
 }
 
+void RtpSink::SetSendPacketCallback(SendPacketCallback callback)
+{
+	sendPacketCallback_ = callback;
+}
 // 发送rtp报文
 void RtpSink::SendRtpPacket(RtpPacket* rtpPacket, int frameSize)
 {
@@ -41,7 +45,7 @@ void RtpSink::SendRtpPacket(RtpPacket* rtpPacket, int frameSize)
 	frameSize += RTP_HEADER_SIZE;      // RtpPacket结构体，其它header占12字节，负载是后面长度，因此发送长度加上header的长度
 	if (sendPacketCallback_ != nullptr)
 	{
-		sendPacketCallback_(rtpPacket, frameSize);
+		sendPacketCallback_(traceId_, rtpPacket, frameSize);
 	}
 }
 

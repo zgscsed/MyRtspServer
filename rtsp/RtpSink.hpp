@@ -13,14 +13,19 @@
 #include "rtp.h"
 #include "net/Timer.hpp"
 #include <functional>
+
+#ifndef RTP_SINK_HPP_
+#define RTP_SINK_HPP_
+
 class RtpSink
 {
 public:
-	using SendPacketCallback = std::function<void(RtpPacket*, int frameSize)>;
+	using SendPacketCallback = std::function<void(int traceId, RtpPacket*, int frameSize)>;
 	
 	virtual ~RtpSink();
 
-	void SetSendPacketCallback(SendPacketCallback callback) { sendPacketCallback_ = callback; }
+	void SetSendPacketCallback(SendPacketCallback callback);
+	void SetTraceId(const int traceId) { traceId_ = traceId; }
 protected:
 	RtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadType);
 	// 将frame数据组装成rtp包,发送
@@ -48,9 +53,11 @@ protected:
 
 	UsageEnvironment* env_;
 	SendPacketCallback sendPacketCallback_;
+	int traceId_;
 	MediaSource* mediaSource_;
 
 	Timer *timer_;
 
 };
+#endif // !RTP_SINK_HPP_
 
