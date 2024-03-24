@@ -8,6 +8,11 @@
  * @Description: rstp session class desc
 -->
 
+## RtspServer类
+有一个TcpServer类来处理客户端的连接。
+一路链接对应一个TcpConnect, 一个RtspSession。TcpConnect用来收发消息，RtspSession处理信令消息。
+RtspServer 类保存上面的信息，然后链接结束后，释放。
+
 ## RtspSession类设计
 
 RtspSession类，管理rtsp会话，一个会话对应一个实例对象。

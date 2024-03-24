@@ -42,7 +42,7 @@ int main(void)
 	std::cout << "RTSP服务器项目" << std::endl;
 
 	// RtspServer 重新写
-	RtspServer rtspServer(8554, 55532, 55533);
+	RtspServer rtspServer(env, 8554, 55532, 55533);
 
 	rtspServer.start();
 	

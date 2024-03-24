@@ -13,20 +13,49 @@ desc: rtsp服务器类，使用rtsp协议传输数据
 
 #include "net/UDPSocket.hpp"
 #include "net/TCPSocket.hpp"
+#include "net/TcpConnection.hpp"
+#include "net/TcpServer.hpp"
 #include "rtspSession.h"
+#include "net/UsageEnvironment.hpp"
 
+#include <memory>
+#include <mutex>
+#include <map>
 #define BUFSIZE 4096
 
 class RtspServer {
 public:
-	RtspServer(int serverport, int rtpPort, int rtcpPort);
+    //tcp连接的智能指针类型
+    typedef std::shared_ptr<TcpConnection> spTcpConnection;
+	RtspServer(UsageEnvironment* env, int serverport, int rtpPort, int rtcpPort);
 	~RtspServer();
 
 	//rtsp数据接收和发送过程
 	void messagesProcess(int clientSockfd, char* clientIp);
 
 	void start();                        //启动
-private:               
+private:
+    //新连接回调函数
+    void HandleNewConnection(const spTcpConnection& sptcpconn);
+
+    //数据接收回调函数
+    void HandleMessage(const spTcpConnection& sptcpconn, std::string& msg);
+
+    //数据发送完成回调函数
+    void HandleSendComplete(const spTcpConnection& sptcpconn);
+
+    //连接关闭回调函数
+    void HandleClose(const spTcpConnection& sptcpconn);
+
+    //连接异常回调函数
+    void HandleError(const spTcpConnection& sptcpconn);
+
+    std::map<spTcpConnection, std::shared_ptr<RtspSession>> rtspSessionMap_;
+    std::mutex mutex_;       // 可能多线程使用上面的数据
+
+    TcpServer tcpServer_;
+
+    UsageEnvironment* env_;
 	TCPSocket serverSockfd_;                      //使用tcp连接，客户端和服务端
 	RtspSession* session;                         //解析消息
 

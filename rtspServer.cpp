@@ -28,7 +28,7 @@ desc: rtsp服务器类，使用rtsp协议传输数据
 #include <string>
 #include <fcntl.h>
 
-
+#include <functional>
 
 //接收数据
 int recvnn(int fd, std::string&buf)
@@ -56,9 +56,15 @@ int sendnn(int fd, std::string &buf)
 	return nbyte;
 }
 
-RtspServer::RtspServer(int serverport, int rtpPort, int rtcpPort)
-	:serverSockfd_()
+RtspServer::RtspServer(UsageEnvironment* env, int serverport, int rtpPort, int rtcpPort)
+	:serverSockfd_(), env_(env), tcpServer_(env->Scheduler()->Loop(), serverport)
 {
+	// tcpserver设置
+	tcpServer_.SetNewConnCallback(std::bind(&RtspServer::HandleNewConnection, this, std::placeholders::_1));
+	tcpServer_.SetMessageCallback(std::bind(&RtspServer::HandleMessage, this, std::placeholders::_1, std::placeholders::_2));
+	tcpServer_.SetSendCompleteCallback(std::bind(&RtspServer::HandleSendComplete, this, std::placeholders::_1));
+	tcpServer_.SetCloseCallback(std::bind(&RtspServer::HandleClose, this, std::placeholders::_1));
+	tcpServer_.SetErrorCallback(std::bind(&RtspServer::HandleError, this, std::placeholders::_1));
 	//设置服务器套接字
 	serverSockfd_.SetReuseAddr();
 	serverSockfd_.Bind(serverport);
@@ -157,6 +163,7 @@ void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 //启动
 void RtspServer::start()
 {
+	tcpServer_.Start();
 	//第一步
 	if (!serverSockfd_.IsCreate())
 	{
@@ -199,4 +206,44 @@ void RtspServer::start()
 
 
 
+}
+
+//新连接回调函数
+void RtspServer::HandleNewConnection(const spTcpConnection& sptcpconn)
+{
+	// 一路rtsp会话，一个session管理
+	std::shared_ptr<RtspSession> spRtspSession = std::make_shared<RtspSession>();
+	// 存入map
+	{
+		std::lock_guard<std::mutex> lock(mutex_);
+		rtspSessionMap_[sptcpconn] = spRtspSession;
+	}
+}
+
+//数据接收回调函数
+void RtspServer::HandleMessage(const spTcpConnection& sptcpconn, std::string& msg)
+{
+
+}
+
+//数据发送完成回调函数
+void RtspServer::HandleSendComplete(const spTcpConnection& sptcpconn)
+{
+	// 暂时不需要
+}
+
+//连接关闭回调函数
+void RtspServer::HandleClose(const spTcpConnection& sptcpconn)
+{
+	// 链接结束，map中删除
+	std::lock_guard<std::mutex> lock(mutex_);
+	rtspSessionMap_.erase(sptcpconn);
+}
+
+//连接异常回调函数
+void RtspServer::HandleError(const spTcpConnection& sptcpconn)
+{
+	// 链接报错，map中删除
+	std::lock_guard<std::mutex> lock(mutex_);
+	rtspSessionMap_.erase(sptcpconn);
 }

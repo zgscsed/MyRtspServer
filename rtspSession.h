@@ -49,6 +49,7 @@ typedef struct _RtspResponseContext {
 class RtspSession {
 public:
 	RtspSession(int rtpPort, int rtcpPort);
+	RtspSession() {}
 	~RtspSession();
 
 	//解析消息
