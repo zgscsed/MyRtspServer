@@ -24,6 +24,7 @@ public:
 		RTP_OVER_TCP
 	};
 	static RtpEndPoint* Create(int localPort, int peerPort, std::string peerIp, RtpType type);
+	RtpEndPoint(int localPort, int peerPort, std::string peerIp, RtpType type);
 	~RtpEndPoint();
 
 	// 初始化，主要是socket设置，tcp需要建链
@@ -34,7 +35,6 @@ public:
 	int GetPeerPort() const { return peerPort_; }
 
 private:
-	RtpEndPoint(int localPort, int peerPort, std::string peerIp, RtpType type);
 
 	RtpType type_;
 	int localPort_;
@@ -44,6 +44,25 @@ private:
 	Ipv4Address peerAddr_;
 
 	std::unique_ptr<Socket> rtpSocket_;
+};
+
+class RtspEndPoint
+{
+public:
+	static RtspEndPoint* Create(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type);
+	~RtspEndPoint();
+
+	// 初始化，主要是socket设置，tcp需要建链
+	int Init();
+	// 收发流的函数
+	ssize_t SendRtp(RtpPacket* rtpPacket, int len);
+
+	int GetPeerPort() const { return rtpPoint_.GetPeerPort(); }
+
+private:
+	RtspEndPoint(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type);
+
+	RtpEndPoint rtpPoint_;
 };
 
 #endif // !RTP_END_POINT_HPP_

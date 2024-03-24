@@ -82,7 +82,6 @@ bool MediaSession::AddRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint)
 	}
 	iter->second->rtpList_.push_back(rtpEndPoint);
 	return true;
-
 }
 bool MediaSession::RemoveRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint)
 {
@@ -116,6 +115,58 @@ bool MediaSession::RemoveRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint)
 	return false;
 }
 
+bool MediaSession::AddRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint)
+{
+	if (rtspEndPoint == nullptr)
+	{
+		LOG_ERROR << "AddRtspEndPoint rtspEndPoint is nullptr";
+		return false;
+	}
+	if (traceId < 0 && traceId > MAX_TRACE_NUM)
+	{
+		LOG_ERROR << "AddRtspEndPoint traceId is not valid, traceId: " << traceId;
+		return false;
+	}
+	auto iter = traceMap_.find(traceId);
+	if (iter == traceMap_.end())
+	{
+		LOG_ERROR << "AddRtspEndPoint traceId: " << traceId << " is not find!";
+		return false;
+	}
+	iter->second->rtspList_.push_back(rtspEndPoint);
+	return true;
+}
+bool MediaSession::RemoveRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint)
+{
+	// Todo: 检测指针，可以用宏来实现，减少代码
+	if (rtspEndPoint == nullptr)
+	{
+		LOG_ERROR << "RemoveRtspEndPoint rtpEndPoint is nullptr";
+		return false;
+	}
+	if (traceId < 0 && traceId > MAX_TRACE_NUM)
+	{
+		LOG_ERROR << "RemoveRtspEndPoint traceId is not valid, traceId: " << traceId;
+		return false;
+	}
+	auto iter = traceMap_.find(traceId);
+	if (iter == traceMap_.end())
+	{
+		LOG_ERROR << "RemoveRtspEndPoint traceId: " << traceId << " is not find!";
+		return false;
+	}
+	auto& lists = iter->second->rtspList_;
+	for (auto it = lists.begin(); it != lists.end(); ++it)
+	{
+		if (*it == rtspEndPoint)
+		{
+			lists.erase(it);
+			return true;
+		}
+	}
+	LOG_ERROR << "RemoveRtpEndPoint rtspEndPoint peer port:" << rtspEndPoint->GetPeerPort() << " is not find!";
+	return false;
+}
 void MediaSession::HandleSendRtpPacket(int traceId, RtpPacket* rtpPacket, int frameSize)
 {
 	SendRtpPacket(traceId, rtpPacket, frameSize);

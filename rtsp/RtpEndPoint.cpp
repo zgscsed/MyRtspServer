@@ -83,3 +83,29 @@ ssize_t RtpEndPoint::SendRtp(RtpPacket* rtpPacket, int len)
 
 	return 0;
 }
+
+RtspEndPoint* RtspEndPoint::Create(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type)
+{
+	RtspEndPoint* endPoint = new RtspEndPoint(localPort, peerPort, peerIp, type);
+}
+
+RtspEndPoint::RtspEndPoint(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type)
+	:rtpPoint_(localPort, peerPort, peerIp, type)
+{
+
+}
+RtspEndPoint::~RtspEndPoint()
+{
+
+}
+
+// 初始化，主要是socket设置，tcp需要建链
+int RtspEndPoint::Init()
+{
+	rtpPoint_.Init();
+}
+// 收发流的函数
+ssize_t RtspEndPoint::SendRtp(RtpPacket* rtpPacket, int len)
+{
+	return rtpPoint_.SendRtp(rtpPacket, len);
+}

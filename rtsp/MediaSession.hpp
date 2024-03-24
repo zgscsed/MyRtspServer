@@ -29,6 +29,9 @@ public:
 	bool AddRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint);
 	bool RemoveRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint);
 
+	bool AddRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint);
+	bool RemoveRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint);
+
 private:
 	// trace对象中指针对象，有更调用方管理释放资源
 	class Trace
@@ -38,6 +41,7 @@ private:
 		RtpSink* rtpSink_;
 		bool isAlive_;
 		std::list<RtpEndPoint*> rtpList_;
+		std::list<RtspEndPoint*> rtspList_;
 
 		// 需要保存媒体面协商的socket信息，才能将rtp发出去
 	};

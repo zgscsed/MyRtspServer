@@ -55,3 +55,11 @@ readFrame 函数读取视频源中的一帧h264数据
 
 ## MediaSession 类
 功能：一个session可以支持多个客户端拉流。保存了视频源，以及rtsp回话协商的媒体面参数。实现发送rtp流给客户端。
+
+## Ipv4Address类
+功能：封装IPv4网络序地址
+
+## RtpEndPoint类
+功能：RtpEndPoint类，实现rtp包的收发。
+## RtspEndPoint类
+功能：RtspEndPoint类，实现rtsp包的收发。
