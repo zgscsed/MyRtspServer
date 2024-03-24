@@ -223,7 +223,48 @@ void RtspServer::HandleNewConnection(const spTcpConnection& sptcpconn)
 //数据接收回调函数
 void RtspServer::HandleMessage(const spTcpConnection& sptcpconn, std::string& msg)
 {
+	std::shared_ptr<RtspSession> spRtspSession;
+	{
+		std::lock_guard<std::mutex> lock(mutex_);
+		spRtspSession = rtspSessionMap_[sptcpconn];
+	}
+	// 存在线程池的话，线程池中处理
+	if (env_->CurThreadPool())
+	{
+		// 	// RtspRequestContext rtspRequestContet;              //请求消息结构体
+		RtspMessage* rtspMessage = nullptr;
 
+		//解析消息
+		session->praseRtspRequest(msg, &rtspMessage);
+		// 消息异常的处理：
+		
+		// 设置当前的处理异步的，避免这个时候链接关闭了， 处理完后设置位false。
+		sptcpconn->SetAsyncProcessing(true);
+		env_->CurThreadPool()->AddTask([=]() {
+			//RtspResponseContext rtspResponseContext;           //响应消息结构体
+			std::string rtspResponseContext;                   //响应消息
+			//消息处理
+			session->rtspProcess(rtspMessage, rtspResponseContext);
+
+			sptcpconn->Send(rtspResponseContext);
+		});
+
+		return;
+	}
+	// 当前io线程处理， 不到线程池中处理
+	// 	// RtspRequestContext rtspRequestContet;              //请求消息结构体
+	RtspMessage* rtspMessage = nullptr;
+	//RtspResponseContext rtspResponseContext;           //响应消息结构体
+	std::string rtspResponseContext;                   //响应消息
+	//解析消息
+	session->praseRtspRequest(msg, &rtspMessage);
+	// 消息异常的处理：
+	
+
+	//消息处理
+	session->rtspProcess(rtspMessage, rtspResponseContext);
+
+	sptcpconn->Send(rtspResponseContext);
 }
 
 //数据发送完成回调函数
