@@ -12,8 +12,10 @@
 
 #include "net/UsageEnvironment.hpp"
 #include "RtpSink.hpp"
+#include "RtpEndPoint.hpp"
 
 #include <map>
+#include <list>
 class MediaSession
 {
 public:
@@ -22,16 +24,21 @@ public:
 	~MediaSession();
 
 	bool AddRtpSink(int traceId, RtpSink* rtpSink);
-
 	void RemoveRtpSink(int traceId);
 
+	bool AddRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint);
+	bool RemoveRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint);
+
 private:
+	// trace对象中指针对象，有更调用方管理释放资源
 	class Trace
 	{
 	public:
 		int traceId_;
 		RtpSink* rtpSink_;
 		bool isAlive_;
+		std::list<RtpEndPoint*> rtpList_;
+
 		// 需要保存媒体面协商的socket信息，才能将rtp发出去
 	};
 	explicit MediaSession(UsageEnvironment* env);

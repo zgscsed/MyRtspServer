@@ -19,7 +19,7 @@ public:
     UDPSocket();
     virtual ~UDPSocket();
 
-    void Sendto(const void* buf, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen);
+    ssize_t Sendto(const void* buf, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen);
     ssize_t Recvfrom(void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen);
 
     // 用于设置 UDP socket 是否启用了广播

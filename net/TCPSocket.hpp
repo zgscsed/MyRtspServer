@@ -6,7 +6,7 @@
  * @LastEditors: zgscsed
  * @LastEditTime: 2023年5月10日23:01:49
  * @Description: socket 子类
-	在 TCPSocket 类中，我们通过继承 Socket 类并添加新的方法 sendto() 和 recvfrom() 来实现 UDP 的发送和接收功能
+	在 TCPSocket 类中，我们通过继承 Socket 类并添加新的方法 Sendall() 和 Recv() 来实现 TCP 的发送和接收功能
  */
 
 

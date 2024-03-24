@@ -19,9 +19,12 @@
 #include <arpa/inet.h>
 class Socket {
 public:
+    Socket();
     Socket(int domain, int type, int protocol);
     virtual ~Socket();
 
+    // 创建fd
+    bool Create(int domain, int type, int protocol);
     int Bind(int port);
     int Bind(const struct sockaddr* addr, socklen_t addrlen);
     int Listen(int backlog);

@@ -22,6 +22,10 @@
 #include <stdlib.h>
 #include <cstring>
 
+Socket::Socket()
+{
+	fd_ = -1;
+}
 Socket::Socket(int domain, int type, int protocol)
 {
 	//创建套接字
@@ -38,7 +42,20 @@ Socket::~Socket()
 	Close();
 	std::cout << "server socket ~Socket..." << std::endl;
 }
-
+// 创建fd
+bool Socket::Create(int domain, int type, int protocol)
+{
+	//创建套接字
+	fd_ = socket(domain, type, protocol);
+	if (fd_ == -1)
+	{
+		std::cout << "socket error" << std::endl;
+		return false;
+	}
+	else
+		std::cout << "server socket create " << fd_ << std::endl;
+	return true;
+}
 int Socket::Bind(int port)
 {
 	struct sockaddr_in serveraddr;

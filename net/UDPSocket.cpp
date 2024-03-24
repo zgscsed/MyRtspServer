@@ -24,12 +24,12 @@ UDPSocket::~UDPSocket()
 
 }
 
-void UDPSocket::Sendto(const void* buf, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen)
+ssize_t UDPSocket::Sendto(const void* buf, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addrlen)
 {
     ssize_t ret = ::sendto(fd_, buf, len, flags, dest_addr, addrlen);
     if (ret == -1) {
         std::cout << "Failed to send data" << std::endl;
-        return;
+        return ret;
     }
 }
 ssize_t UDPSocket::Recvfrom(void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen)
