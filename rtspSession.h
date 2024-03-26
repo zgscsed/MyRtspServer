@@ -26,6 +26,8 @@ desc: rtsp服务器的会话解析类，实现解析rstp交互
 #include "rtsp/RtspParser.hpp"
 #include "net/UDPSocket.hpp"
 
+class RtspServer;
+
 //Rtsp 请求消息结构体
 typedef struct _RtspRequestContext {
 	std::string method;
@@ -48,7 +50,7 @@ typedef struct _RtspResponseContext {
 
 class RtspSession {
 public:
-	RtspSession(int rtpPort, int rtcpPort);
+	RtspSession(RtspServer* rtspServer, int rtpPort, int rtcpPort);
 	RtspSession() {}
 	~RtspSession();
 
@@ -61,6 +63,8 @@ public:
 	void rtspProcess(RtspMessage *rtspMessage, std::string&responseContext);
 
 
+	void SetPeerAddr(struct sockaddr_in peerAddr) { peerAddr_ = peerAddr; }
+
 // private:
 	UDPSocket serverRtpFd_;                     //udp传输rtp数据
 	UDPSocket serverRtcpFd_;                    //udp传输rtcp数据
@@ -70,6 +74,12 @@ public:
 
 	int serverRtpPort_;
 	int serverRtcpPort_;
+
+	// 对端地址
+	struct sockaddr_in peerAddr_;
+
+	RtspServer* rtspServer_;
+	int traceId_;
 
 };
 

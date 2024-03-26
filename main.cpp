@@ -30,7 +30,7 @@ int main(void)
 	// 初始化环境变量
 	UsageEnvironment* env = UsageEnvironment::CreateNew(scheduler, pool, timerMgr);
 
-	MediaSession* session = MediaSession::Create(env);
+	MediaSession* session = MediaSession::Create(env, "live");
 	// 视频源
 	MediaSource* mediaSource = H264MediaSource::Create(env, "test.h264");
 	// rtpSink 初始化

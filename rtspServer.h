@@ -17,6 +17,7 @@ desc: rtsp服务器类，使用rtsp协议传输数据
 #include "net/TcpServer.hpp"
 #include "rtspSession.h"
 #include "net/UsageEnvironment.hpp"
+#include "rtsp/MediaSession.hpp"
 
 #include <memory>
 #include <mutex>
@@ -32,6 +33,8 @@ public:
 
 	//rtsp数据接收和发送过程
 	void messagesProcess(int clientSockfd, char* clientIp);
+
+    MediaSession* GetMediaSession(std::string name);
 
 	void start();                        //启动
 private:
@@ -54,6 +57,8 @@ private:
     std::mutex mutex_;       // 可能多线程使用上面的数据
 
     TcpServer tcpServer_;
+
+    std::map<std::string, MediaSession*> mediaSessions_;
 
     UsageEnvironment* env_;
 	TCPSocket serverSockfd_;                      //使用tcp连接，客户端和服务端

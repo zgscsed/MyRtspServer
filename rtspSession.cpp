@@ -8,11 +8,14 @@ desc: rtsp服务器的会话解析类，实现解析rstp交互
 
 #include "rtspSession.h"
 #include "rtsp/RtspParser.hpp"
+#include "rtsp/MediaSession.hpp"
+#include "rtspServer.h"
 #include <sstream>
 #include <cstring> 
-RtspSession::RtspSession(int rtpPort, int rtcpPort)
+RtspSession::RtspSession(RtspServer* rtspServer, int rtpPort, int rtcpPort)
 	: serverRtpFd_(),
-	serverRtcpFd_()
+	serverRtcpFd_(), 
+	rtspServer_(rtspServer)
 {
 	serverRtpFd_.SetReuseAddr();
 	serverRtpFd_.Bind(rtpPort);
@@ -170,7 +173,7 @@ void RtspSession::rtspProcess(RtspMessage *rtspMessage, std::string&responseCont
 			"o=- 9%ld 1 IN IP4 %s\r\n"
 			"t=0 0\r\n"
 			"a=control:*\r\n"
-			"m=video 0 RTP/AVP 96\r\n"
+			"m=video 62123 RTP/AVP 96\r\n"
 			"a=rtpmap:96 H264/90000\r\n"
 			"a=control:track0\r\n",
 			time(NULL), localIp);
@@ -208,6 +211,14 @@ void RtspSession::rtspProcess(RtspMessage *rtspMessage, std::string&responseCont
 			clientRtcpPort_,
 			serverRtpPort_,
 			serverRtcpPort_);
+		
+		// media 设置
+		MediaSession* session = rtspServer_->GetMediaSession("live");
+		std::string peerIp = inet_ntoa(peerAddr_.sin_addr);
+		RtpEndPoint* rtpPoint = RtpEndPoint::Create(serverRtpPort_, clientRtpPort_, peerIp, RtpEndPoint::RtpType::RTP_OVER_UDP);
+		session->AddRtpEndPoint(traceId_, rtpPoint);
+		RtcpEndPoint* rtcpPoint = RtcpEndPoint::Create(serverRtcpPort_, clientRtcpPort_, peerIp, RtpEndPoint::RtpType::RTP_OVER_UDP);
+		session->AddRtcpEndPoint(traceId_, rtcpPoint);
 		break;
 	}
 	case RTSP_PLAY:
@@ -217,6 +228,8 @@ void RtspSession::rtspProcess(RtspMessage *rtspMessage, std::string&responseCont
 			"Range: npt=0.000-\r\n"
 			"Session: 66334873; timeout=60\r\n\r\n",
 			cseq);
+
+
 		break;
 	}
 	case RTSP_TEARDOWN:

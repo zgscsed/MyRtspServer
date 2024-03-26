@@ -46,11 +46,11 @@ private:
 	std::unique_ptr<Socket> rtpSocket_;
 };
 
-class RtspEndPoint
+class RtcpEndPoint
 {
 public:
-	static RtspEndPoint* Create(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type);
-	~RtspEndPoint();
+	static RtcpEndPoint* Create(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type);
+	~RtcpEndPoint();
 
 	// 初始化，主要是socket设置，tcp需要建链
 	int Init();
@@ -60,7 +60,7 @@ public:
 	int GetPeerPort() const { return rtpPoint_.GetPeerPort(); }
 
 private:
-	RtspEndPoint(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type);
+	RtcpEndPoint(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type);
 
 	RtpEndPoint rtpPoint_;
 };

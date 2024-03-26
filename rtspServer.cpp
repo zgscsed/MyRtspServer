@@ -70,7 +70,7 @@ RtspServer::RtspServer(UsageEnvironment* env, int serverport, int rtpPort, int r
 	serverSockfd_.Bind(serverport);
 	serverSockfd_.Listen(8888);
 
-	session = new RtspSession(rtpPort, rtcpPort);
+	session = new RtspSession(this, rtpPort, rtcpPort);
 }
 RtspServer::~RtspServer()
 {
@@ -160,6 +160,16 @@ void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
 	::close(clientSockfd);
 }
 
+MediaSession* RtspServer::GetMediaSession(std::string name)
+{
+	auto iter = mediaSessions_.find(name);
+	if (iter == mediaSessions_.end())
+	{
+		return nullptr;
+	}
+	return iter->second;
+}
+
 //启动
 void RtspServer::start()
 {
@@ -217,6 +227,7 @@ void RtspServer::HandleNewConnection(const spTcpConnection& sptcpconn)
 	{
 		std::lock_guard<std::mutex> lock(mutex_);
 		rtspSessionMap_[sptcpconn] = spRtspSession;
+		spRtspSession->SetPeerAddr(sptcpconn->GetPeerAddr());
 	}
 }
 
@@ -235,7 +246,7 @@ void RtspServer::HandleMessage(const spTcpConnection& sptcpconn, std::string& ms
 		RtspMessage* rtspMessage = nullptr;
 
 		//解析消息
-		session->praseRtspRequest(msg, &rtspMessage);
+		spRtspSession->praseRtspRequest(msg, &rtspMessage);
 		// 消息异常的处理：
 		
 		// 设置当前的处理异步的，避免这个时候链接关闭了， 处理完后设置位false。
@@ -244,7 +255,7 @@ void RtspServer::HandleMessage(const spTcpConnection& sptcpconn, std::string& ms
 			//RtspResponseContext rtspResponseContext;           //响应消息结构体
 			std::string rtspResponseContext;                   //响应消息
 			//消息处理
-			session->rtspProcess(rtspMessage, rtspResponseContext);
+			spRtspSession->rtspProcess(rtspMessage, rtspResponseContext);
 
 			sptcpconn->Send(rtspResponseContext);
 		});
@@ -257,12 +268,12 @@ void RtspServer::HandleMessage(const spTcpConnection& sptcpconn, std::string& ms
 	//RtspResponseContext rtspResponseContext;           //响应消息结构体
 	std::string rtspResponseContext;                   //响应消息
 	//解析消息
-	session->praseRtspRequest(msg, &rtspMessage);
+	spRtspSession->praseRtspRequest(msg, &rtspMessage);
 	// 消息异常的处理：
 	
 
 	//消息处理
-	session->rtspProcess(rtspMessage, rtspResponseContext);
+	spRtspSession->rtspProcess(rtspMessage, rtspResponseContext);
 
 	sptcpconn->Send(rtspResponseContext);
 }

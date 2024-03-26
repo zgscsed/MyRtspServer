@@ -37,6 +37,7 @@ public:
 
 	// 获取文件描述符
 	int GetFd() const;
+	struct sockaddr_in GetPeerAddr() { return clientAddr_; }
 
 	// 获取loop
 	EventLoop* GetLoop() const;

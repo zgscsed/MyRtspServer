@@ -10,15 +10,15 @@
 #include "MediaSession.hpp"
 #include "base/global.hpp"
 
-const int MAX_TRACE_NUM = 3;
+const int MAX_TRACE_NUM = 2;
 
-MediaSession* MediaSession::Create(UsageEnvironment* env)
+MediaSession* MediaSession::Create(UsageEnvironment* env, std::string name)
 {
-	MediaSession* session = new MediaSession(env);
+	MediaSession* session = new MediaSession(env, name);
 	return session;
 }
-MediaSession::MediaSession(UsageEnvironment* env):
-	env_(env)
+MediaSession::MediaSession(UsageEnvironment* env, std::string name):
+	env_(env), name_(name)
 {
 	LOG_INFO << "MediaSession construct";
 }
@@ -115,7 +115,7 @@ bool MediaSession::RemoveRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint)
 	return false;
 }
 
-bool MediaSession::AddRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint)
+bool MediaSession::AddRtcpEndPoint(int traceId, RtcpEndPoint* rtspEndPoint)
 {
 	if (rtspEndPoint == nullptr)
 	{
@@ -133,10 +133,10 @@ bool MediaSession::AddRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint)
 		LOG_ERROR << "AddRtspEndPoint traceId: " << traceId << " is not find!";
 		return false;
 	}
-	iter->second->rtspList_.push_back(rtspEndPoint);
+	iter->second->rtcpList_.push_back(rtspEndPoint);
 	return true;
 }
-bool MediaSession::RemoveRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint)
+bool MediaSession::RemoveRtcpEndPoint(int traceId, RtcpEndPoint* rtspEndPoint)
 {
 	// Todo: 检测指针，可以用宏来实现，减少代码
 	if (rtspEndPoint == nullptr)
@@ -155,7 +155,7 @@ bool MediaSession::RemoveRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint)
 		LOG_ERROR << "RemoveRtspEndPoint traceId: " << traceId << " is not find!";
 		return false;
 	}
-	auto& lists = iter->second->rtspList_;
+	auto& lists = iter->second->rtcpList_;
 	for (auto it = lists.begin(); it != lists.end(); ++it)
 	{
 		if (*it == rtspEndPoint)

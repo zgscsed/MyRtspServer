@@ -20,7 +20,7 @@ class MediaSession
 {
 public:
 	// 一路视频源
-	static MediaSession* Create(UsageEnvironment* env);
+	static MediaSession* Create(UsageEnvironment* env, std::string name);
 	~MediaSession();
 
 	bool AddRtpSink(int traceId, RtpSink* rtpSink);
@@ -29,8 +29,10 @@ public:
 	bool AddRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint);
 	bool RemoveRtpEndPoint(int traceId, RtpEndPoint* rtpEndPoint);
 
-	bool AddRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint);
-	bool RemoveRtspEndPoint(int traceId, RtspEndPoint* rtspEndPoint);
+	bool AddRtcpEndPoint(int traceId, RtcpEndPoint* rtspEndPoint);
+	bool RemoveRtcpEndPoint(int traceId, RtcpEndPoint* rtspEndPoint);
+
+	std::string GetMediaSessionName() { return name_; }
 
 private:
 	// trace对象中指针对象，有更调用方管理释放资源
@@ -39,16 +41,18 @@ private:
 	public:
 		int traceId_;
 		RtpSink* rtpSink_;
-		bool isAlive_;
+		bool isAlive_;  // true: 可以发送媒体流
 		std::list<RtpEndPoint*> rtpList_;
-		std::list<RtspEndPoint*> rtspList_;
+		std::list<RtcpEndPoint*> rtcpList_;
 
 		// 需要保存媒体面协商的socket信息，才能将rtp发出去
 	};
-	explicit MediaSession(UsageEnvironment* env);
+	explicit MediaSession(UsageEnvironment* env, std::string name);
 
 	void HandleSendRtpPacket(int traceId, RtpPacket* rtpPacket, int frameSize);
 	void SendRtpPacket(int traceId, RtpPacket* rtpPacket, int frameSize);
+
+	std::string name_;
 
 	std::map<int, Trace*> traceMap_;
 	UsageEnvironment* env_;
