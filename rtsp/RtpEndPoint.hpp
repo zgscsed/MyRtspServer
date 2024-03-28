@@ -34,7 +34,12 @@ public:
 
 	int GetPeerPort() const { return peerPort_; }
 
+	bool IsAlive() const { return  isAlive_; }
+	void SetAlive(bool alive) { isAlive_ = alive; }
+
 private:
+
+	bool isAlive_;
 
 	RtpType type_;
 	int localPort_;
@@ -58,10 +63,10 @@ public:
 	ssize_t SendRtp(RtpPacket* rtpPacket, int len);
 
 	int GetPeerPort() const { return rtpPoint_.GetPeerPort(); }
-
+	bool IsAlive() const { return  rtpPoint_.IsAlive(); }
+	void SetAlive(bool alive) { rtpPoint_.SetAlive(alive); }
 private:
 	RtcpEndPoint(int localPort, int peerPort, std::string peerIp, RtpEndPoint::RtpType type);
-
 	RtpEndPoint rtpPoint_;
 };
 

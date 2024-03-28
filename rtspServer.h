@@ -56,13 +56,12 @@ private:
     std::map<spTcpConnection, std::shared_ptr<RtspSession>> rtspSessionMap_;
     std::mutex mutex_;       // 可能多线程使用上面的数据
 
-    TcpServer tcpServer_;
+    TcpServer tcpServer_;          //使用tcp服务器管理链接
 
     std::map<std::string, MediaSession*> mediaSessions_;
 
     UsageEnvironment* env_;
-	TCPSocket serverSockfd_;                      //使用tcp连接，客户端和服务端
-	RtspSession* session;                         //解析消息
+	//RtspSession* session;                         //解析消息
 
 };
 #endif // !RTSPSERVER_H

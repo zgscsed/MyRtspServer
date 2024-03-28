@@ -46,7 +46,8 @@ int main(void)
 
 	rtspServer.start();
 	
-	env->Scheduler()->Loop();
+	env->Scheduler()->Loop()->Loop();
+	std::cout << "RTSP服务器项目 end" << std::endl;
 
 	return 0;
 }

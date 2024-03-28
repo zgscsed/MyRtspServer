@@ -20,10 +20,11 @@ desc: rtsp服务器的会话解析类，实现解析rstp交互
 
 #include <iostream>
 #include <map>
-#include <list>
+#include <vector>
 #include <string>
 
 #include "rtsp/RtspParser.hpp"
+#include "rtsp/RtpEndPoint.hpp"
 #include "net/UDPSocket.hpp"
 
 class RtspServer;
@@ -74,6 +75,9 @@ public:
 
 	int serverRtpPort_;
 	int serverRtcpPort_;
+
+	std::vector<RtpEndPoint*> rtpEndPointList_;
+	std::vector<RtcpEndPoint*> rtcpEndPointList_;
 
 	// 对端地址
 	struct sockaddr_in peerAddr_;

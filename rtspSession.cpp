@@ -30,6 +30,16 @@ RtspSession::~RtspSession()
 {
 	serverRtpFd_.Close();
 	serverRtcpFd_.Close();
+
+	// 释放媒体资源
+	MediaSession* session = rtspServer_->GetMediaSession("live");
+	for (int traceId = 0; traceId < rtpEndPointList_.size(); ++traceId)
+	{
+		rtpEndPointList_[traceId]->SetAlive(false);
+		rtcpEndPointList_[traceId]->SetAlive(false);
+		session->RemoveRtpEndPoint(traceId, rtpEndPointList_[traceId]);
+		session->RemoveRtcpEndPoint(traceId, rtcpEndPointList_[traceId]);
+	}
 }
 
 //解析消息
@@ -219,6 +229,8 @@ void RtspSession::rtspProcess(RtspMessage *rtspMessage, std::string&responseCont
 		session->AddRtpEndPoint(traceId_, rtpPoint);
 		RtcpEndPoint* rtcpPoint = RtcpEndPoint::Create(serverRtcpPort_, clientRtcpPort_, peerIp, RtpEndPoint::RtpType::RTP_OVER_UDP);
 		session->AddRtcpEndPoint(traceId_, rtcpPoint);
+		rtpEndPointList_.push_back(rtpPoint);
+		rtcpEndPointList_.push_back(rtcpPoint);
 		break;
 	}
 	case RTSP_PLAY:
@@ -229,7 +241,15 @@ void RtspSession::rtspProcess(RtspMessage *rtspMessage, std::string&responseCont
 			"Session: 66334873; timeout=60\r\n\r\n",
 			cseq);
 
-
+		// 设置rtpEndPoint可以发送了
+		for (auto rtpPoiont : rtpEndPointList_)
+		{
+			rtpPoiont->SetAlive(true);
+		}
+		for (auto rtcpPoiont : rtcpEndPointList_)
+		{
+			rtcpPoiont->SetAlive(true);
+		}
 		break;
 	}
 	case RTSP_TEARDOWN:

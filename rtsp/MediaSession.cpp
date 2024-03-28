@@ -185,5 +185,12 @@ void MediaSession::SendRtpPacket(int traceId, RtpPacket* rtpPacket, int frameSiz
 		return;
 	}
 
-	// 发送rtp, 缺少rtp实例列
+	// Todo: 发送rtp, 新加入的不能重头看，这个地方
+	for (auto rtpPoint : trace->rtpList_)
+	{
+		if (rtpPoint->IsAlive())
+		{
+			rtpPoint->SendRtp(rtpPacket, frameSize);
+		}
+	}
 }

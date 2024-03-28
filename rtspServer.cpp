@@ -57,7 +57,7 @@ int sendnn(int fd, std::string &buf)
 }
 
 RtspServer::RtspServer(UsageEnvironment* env, int serverport, int rtpPort, int rtcpPort)
-	:serverSockfd_(), env_(env), tcpServer_(env->Scheduler()->Loop(), serverport)
+	:env_(env), tcpServer_(env->Scheduler()->Loop(), serverport)
 {
 	// tcpserver设置
 	tcpServer_.SetNewConnCallback(std::bind(&RtspServer::HandleNewConnection, this, std::placeholders::_1));
@@ -65,100 +65,95 @@ RtspServer::RtspServer(UsageEnvironment* env, int serverport, int rtpPort, int r
 	tcpServer_.SetSendCompleteCallback(std::bind(&RtspServer::HandleSendComplete, this, std::placeholders::_1));
 	tcpServer_.SetCloseCallback(std::bind(&RtspServer::HandleClose, this, std::placeholders::_1));
 	tcpServer_.SetErrorCallback(std::bind(&RtspServer::HandleError, this, std::placeholders::_1));
-	//设置服务器套接字
-	serverSockfd_.SetReuseAddr();
-	serverSockfd_.Bind(serverport);
-	serverSockfd_.Listen(8888);
 
-	session = new RtspSession(this, rtpPort, rtcpPort);
+	//session = new RtspSession(this, rtpPort, rtcpPort);
 }
 RtspServer::~RtspServer()
 {
-	serverSockfd_.Close();
-	delete session;
+	//delete session;
 
 }
 
 //rtsp数据接收和发送过程
-void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
-{
-	// RtspRequestContext rtspRequestContet;              //请求消息结构体
-	RtspMessage *rtspMessage = nullptr;
-	//RtspResponseContext rtspResponseContext;           //响应消息结构体
-	std::string rtspResponseContext;                   //响应消息
-	std::string recvBuf;                               //接收消息
-	std::string sendBuf;                               //发送消息
-
-	//rtsp交互过程
-	while (1)
-	{
-		//接收客户端的消息
-		int readsum = recvnn(clientSockfd, recvBuf);
-
-		//没有收到数据，说明连接有问题，直接退出
-		if (readsum <= 0)
-			break;
-
-		std::cout << "----------------C->S---------------------------"<<std::endl;
-		std::cout << recvBuf << std::endl;
-
-		//解析消息
-		session->praseRtspRequest(recvBuf, &rtspMessage);
-
-		//消息处理
-		session->rtspProcess(rtspMessage, rtspResponseContext);
-
-		std::cout << "----------------S->C---------------------------" << std::endl;
-		std::cout << rtspResponseContext << std::endl;
-
-
-		//返回消息
-		sendnn(clientSockfd, rtspResponseContext);
-
-		//播放
-		if (rtspMessage->rtspType == RTSP_PLAY)
-		{
-			int frameSize, startCode;
-			char* frame = (char*)malloc(500000);
-			struct RtpPacket *rtpPacket = (struct RtpPacket*)malloc(500000);
-			int fd = open("test.h264", O_RDONLY);
-			RtpHeaderInit(rtpPacket, 0, 0, 0, RTP_VESION, RTP_PAYLOAD_TYPE_H264, 0, 0, 0, 0x88923423);
-
-			std::cout <<"play"<<std::endl;
-
-			while (1)
-			{
-				frameSize = getFrameFromH264File(fd, frame, 500000);
-
-				if (frameSize < 0)
-				{
-					break;
-				}
-
-				if (startCode3(frame))
-				{
-					startCode = 3;
-				}
-				else
-				{
-					startCode = 4;
-				}
-				
-				frameSize -= startCode;
-				int ret = RtpSendH264Frame(session->serverRtpFd_.GetFd(), clientIp, session->clientRtpPort_, rtpPacket, frame+startCode, frameSize);
-				//std::cout <<"send rtp:"<< ret<<std::endl;
-				rtpPacket->rtpHeader.timestamp += 90000/25;
-
-				usleep(1000*1000/25);
-			}
-			free(frame);
-			free(rtpPacket);
-		}
-	}
-
-	//关闭客户端方向的连接
-	::close(clientSockfd);
-}
+//void RtspServer::messagesProcess(int clientSockfd, char *clientIp)
+//{
+//	// RtspRequestContext rtspRequestContet;              //请求消息结构体
+//	RtspMessage *rtspMessage = nullptr;
+//	//RtspResponseContext rtspResponseContext;           //响应消息结构体
+//	std::string rtspResponseContext;                   //响应消息
+//	std::string recvBuf;                               //接收消息
+//	std::string sendBuf;                               //发送消息
+//
+//	//rtsp交互过程
+//	while (1)
+//	{
+//		//接收客户端的消息
+//		int readsum = recvnn(clientSockfd, recvBuf);
+//
+//		//没有收到数据，说明连接有问题，直接退出
+//		if (readsum <= 0)
+//			break;
+//
+//		std::cout << "----------------C->S---------------------------"<<std::endl;
+//		std::cout << recvBuf << std::endl;
+//
+//		//解析消息
+//		session->praseRtspRequest(recvBuf, &rtspMessage);
+//
+//		//消息处理
+//		session->rtspProcess(rtspMessage, rtspResponseContext);
+//
+//		std::cout << "----------------S->C---------------------------" << std::endl;
+//		std::cout << rtspResponseContext << std::endl;
+//
+//
+//		//返回消息
+//		sendnn(clientSockfd, rtspResponseContext);
+//
+//		//播放
+//		if (rtspMessage->rtspType == RTSP_PLAY)
+//		{
+//			int frameSize, startCode;
+//			char* frame = (char*)malloc(500000);
+//			struct RtpPacket *rtpPacket = (struct RtpPacket*)malloc(500000);
+//			int fd = open("test.h264", O_RDONLY);
+//			RtpHeaderInit(rtpPacket, 0, 0, 0, RTP_VESION, RTP_PAYLOAD_TYPE_H264, 0, 0, 0, 0x88923423);
+//
+//			std::cout <<"play"<<std::endl;
+//
+//			while (1)
+//			{
+//				frameSize = getFrameFromH264File(fd, frame, 500000);
+//
+//				if (frameSize < 0)
+//				{
+//					break;
+//				}
+//
+//				if (startCode3(frame))
+//				{
+//					startCode = 3;
+//				}
+//				else
+//				{
+//					startCode = 4;
+//				}
+//				
+//				frameSize -= startCode;
+//				int ret = RtpSendH264Frame(session->serverRtpFd_.GetFd(), clientIp, session->clientRtpPort_, rtpPacket, frame+startCode, frameSize);
+//				//std::cout <<"send rtp:"<< ret<<std::endl;
+//				rtpPacket->rtpHeader.timestamp += 90000/25;
+//
+//				usleep(1000*1000/25);
+//			}
+//			free(frame);
+//			free(rtpPacket);
+//		}
+//	}
+//
+//	//关闭客户端方向的连接
+//	::close(clientSockfd);
+//}
 
 MediaSession* RtspServer::GetMediaSession(std::string name)
 {
@@ -174,48 +169,36 @@ MediaSession* RtspServer::GetMediaSession(std::string name)
 void RtspServer::start()
 {
 	tcpServer_.Start();
-	//第一步
-	if (!serverSockfd_.IsCreate())
-	{
-		//创建套接字有问题，直接返回
-		return;
-	}
 
-	//第二步，开始接收客户端的连接请求
-	serverSockfd_.PrintIPAndPort();
+	//while (1)
+	//{
+	//	int clientSockfd;
+	//	char *clientIP = "192.168.1.7";
+	//	int clientPort;
 
-	while (1)
-	{
-		int clientSockfd;
-		char *clientIP = "192.168.1.7";
-		int clientPort;
+	//	struct sockaddr_in clientaddr;
 
-		struct sockaddr_in clientaddr;
+	//	//连接一个客户端后
+	//	if ((clientSockfd = serverSockfd_.Accept(clientaddr)) > 0)
+	//	{
+	//		// 获取对端 IP 地址和端口号
+	//		struct sockaddr_in peer_addr;
+	//		socklen_t peer_addr_len = sizeof(peer_addr);
+	//		getpeername(clientSockfd, (struct sockaddr*)&peer_addr, &peer_addr_len);
 
-		//连接一个客户端后
-		if ((clientSockfd = serverSockfd_.Accept(clientaddr)) > 0)
-		{
-			// 获取对端 IP 地址和端口号
-			struct sockaddr_in peer_addr;
-			socklen_t peer_addr_len = sizeof(peer_addr);
-			getpeername(clientSockfd, (struct sockaddr*)&peer_addr, &peer_addr_len);
+	//		// 将 IP 地址转换成字符串格式
+	//		char peer_ip[INET_ADDRSTRLEN];
+	//		inet_ntop(AF_INET, &peer_addr.sin_addr, peer_ip, sizeof(peer_ip));
+	//		//解析客户端的ip和端口
+	//		//char* clientIp = inet_ntoa(clientaddr.sin_addr);
+	//		std::cout << "new clinet from ip: " << peer_ip
+	//			<< ":" << ntohs(clientaddr.sin_port) << std::endl;
 
-			// 将 IP 地址转换成字符串格式
-			char peer_ip[INET_ADDRSTRLEN];
-			inet_ntop(AF_INET, &peer_addr.sin_addr, peer_ip, sizeof(peer_ip));
-			//解析客户端的ip和端口
-			//char* clientIp = inet_ntoa(clientaddr.sin_addr);
-			std::cout << "new clinet from ip: " << peer_ip
-				<< ":" << ntohs(clientaddr.sin_port) << std::endl;
+	//		//通信，rtsp的交互过程
+	//		messagesProcess(clientSockfd, peer_ip);
 
-			//通信，rtsp的交互过程
-			messagesProcess(clientSockfd, peer_ip);
-
-		}
-	}
-
-
-
+	//	}
+	//}
 }
 
 //新连接回调函数
